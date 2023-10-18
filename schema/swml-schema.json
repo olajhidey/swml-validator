@@ -816,46 +816,46 @@
                                                                                             }
                                                                                         }
                                                                                     }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "webhooks": {
+                                                                        "type": "array",
+                                                                        "description": "An array of objects that define external API calls.",
+                                                                        "items": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "url": {
+                                                                                    "type": "string",
+                                                                                    "description": "The endpoint for the external service or API."
                                                                                 },
-                                                                                "webhooks": {
-                                                                                    "type": "array",
-                                                                                    "description": "An array of objects that define external API calls.",
-                                                                                    "items": {
-                                                                                        "type": "object",
-                                                                                        "properties": {
-                                                                                            "url": {
-                                                                                                "type": "string",
-                                                                                                "description": "The endpoint for the external service or API."
-                                                                                            },
-                                                                                            "headers": {
-                                                                                                "type": "object",
-                                                                                                "description": "Any necessary headers for the API call."
-                                                                                            },
-                                                                                            "method": {
-                                                                                                "type": "string",
-                                                                                                "description": "The HTTP method (GET, POST, etc.) for the API call.",
-                                                                                                "enum": [
-                                                                                                    "POST",
-                                                                                                    "GET"
-                                                                                                ]
-                                                                                            },
-                                                                                            "output": {
-                                                                                                "type": "object",
-                                                                                                "description": "Defines the format or structure of the response from the API.",
-                                                                                                "properties": {
-                                                                                                    "action": {
-                                                                                                        "type": "array",
-                                                                                                        "description": "A list of actions to be performed upon matching.",
-                                                                                                        "items": {
-                                                                                                            "type": "object"
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "response": {
-                                                                                                        "type": "string",
-                                                                                                        "description": "A static response text or message based on the outcome of the API call."
-                                                                                                    }
-                                                                                                }
+                                                                                "headers": {
+                                                                                    "type": "object",
+                                                                                    "description": "Any necessary headers for the API call."
+                                                                                },
+                                                                                "method": {
+                                                                                    "type": "string",
+                                                                                    "description": "The HTTP method (GET, POST, etc.) for the API call.",
+                                                                                    "enum": [
+                                                                                        "POST",
+                                                                                        "GET"
+                                                                                    ]
+                                                                                },
+                                                                                "output": {
+                                                                                    "type": "object",
+                                                                                    "description": "Defines the format or structure of the response from the API.",
+                                                                                    "properties": {
+                                                                                        "action": {
+                                                                                            "type": "array",
+                                                                                            "description": "A list of actions to be performed upon matching.",
+                                                                                            "items": {
+                                                                                                "type": "object"
                                                                                             }
+                                                                                        },
+                                                                                        "response": {
+                                                                                            "type": "string",
+                                                                                            "description": "A static response text or message based on the outcome of the API call."
                                                                                         }
                                                                                     }
                                                                                 }
