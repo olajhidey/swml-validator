@@ -1,0 +1,14 @@
+{
+    "swml starter": {
+        "prefix": "swml",
+        "body": [
+            "{",
+            "   \"version\": \"1.0.0\",",
+            "   \"sections\": {",
+            "       \"main\": [$1]",
+            "   }",
+            "}"
+        ],
+        "description": "SWML starter template"
+    }
+}
