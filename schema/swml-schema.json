@@ -76,6 +76,80 @@
                                     },
                                     "result": {
                                         "type": "object"
+                                    },
+                                    "serial": {
+                                        "description": "Array of destination objects to dial in order.",
+                                        "type":"array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "to":{
+                                                    "type":"string",
+                                                    "description": "Phone number or SIP URI to dial. Required"
+                                                },
+                                                "from":{
+                                                    "type":"string",
+                                                    "description": "Caller ID number. Optional. Default is calling party caller ID number."
+                                                },
+                                                "timeout":{
+                                                    "type":"string",
+                                                    "description": "Maximum time, in seconds, to wait for destination to answer. Optional. Default is 60."
+                                                },
+                                                "call_state_url":{
+                                                    "type":"string",
+                                                    "description": "Webhook url to send call state change notifications to. Optional. Default is not set."
+                                                },
+                                                "call_state_events":{
+                                                    "type":"array",
+                                                    "description": "An array of call state event names to be notified about.",
+                                                    "items": {
+                                                        "type":"string",
+                                                        "enum": ["created","ringing","answered","ended"]
+                                                    }
+                                                                 
+                                                }
+
+                                            }
+                                        }
+                                    },
+                                    "parallel": {
+                                        "type":"array",
+                                        "description": "Array of destination objects to dial simultaneously.",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "to":{
+                                                    "type":"string",
+                                                    "description": "Phone number or SIP URI to dial. Required"
+                                                },
+                                                "from":{
+                                                    "type":"string",
+                                                    "description": "Caller ID number. Optional. Default is calling party caller ID number."
+                                                },
+                                                "timeout":{
+                                                    "type":"string",
+                                                    "description": "Maximum time, in seconds, to wait for destination to answer. Optional. Default is 60."
+                                                },
+                                                "call_state_url":{
+                                                    "type":"string",
+                                                    "description": "Webhook url to send call state change notifications to. Optional. Default is not set."
+                                                },
+                                                "call_state_events":{
+                                                    "type":"array",
+                                                    "description": "An array of call state event names to be notified about.",
+                                                    "items": {
+                                                        "type":"string",
+                                                        "enum": ["created","ringing","answered","ended"]
+                                                    }
+                                                                 
+                                                }
+
+                                            }
+                                        }
+                                    },
+                                    "to":{
+                                        "type":"string",
+                                        "description": "Single destination to dial. Possible values are a phone number (i.e.: \"+15552345678\") or sip uri (i.e. \"sip:alice@example.com\")."
                                     }
                                 }
                             },

@@ -1,8 +1,12 @@
 {
   "name": "swml-validator",
   "displayName": "swml-validator",
-  "description": "Unofficial visual studio code extension to validate SignalWire Markup Language",
-  "version": "1.0.0",
+  "description": "A Visual studio code extension used to validate SignalWire Markup Language",
+  "version": "1.0.1",
+  "publisher": "Awoyinkaolajide",
+  "repository": {
+    "url": "https://github.com/olajhidey/swml-validator"
+  },
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -26,7 +30,7 @@
     ],
     "commands": [
       {
-        "command": "fextens.helloWorld",
+        "command": "swml-validator.helloWorld",
         "title": "Hello World"
       }
     ]
@@ -44,10 +48,10 @@
     "eslint": "^8.50.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vscode": "^1.1.37"
   },
   "dependencies": {
-    "vscode": "^1.1.37",
     "vscode-json-languageservice": "^5.3.7"
   }
 }
