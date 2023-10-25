@@ -10,5 +10,14 @@
             "}"
         ],
         "description": "SWML starter template"
+    },
+
+    "swml yaml":{
+        "prefix":"swml-yaml",
+        "body": [
+            "version: 1.0.0",
+            "sections:",
+            "   main:"
+        ]
     }
 }
