@@ -1,11 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-const yaml = require(`js-yaml`)
-const yamlLanguageId = 'yaml'
-const fs = require("fs");
-const { LanguageClient, TransportKind, LanguageClientOptions } = require("vscode-languageclient/node")
-const path = require('path');
 
 const extensionId = 'redhat.vscode-yaml'
 const extensions = vscode.extensions.all
