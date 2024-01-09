@@ -31,18 +31,18 @@
     "yamlValidation": [
       {
         "fileMatch": "/*.yaml",
-        "url": "./schema/test.json"
+        "url": "./schema/swml-schema.json"
       },
 
       {
         "fileMatch": "/*.yml",
-        "url": "./schema/test.json"
+        "url": "./schema/swml-schema.json"
       }
     ],
     "jsonValidation": [
       {
         "fileMatch": "/*.json",
-        "url": "./schema/test.json"
+        "url": "./schema/swml-schema.json"
       }
     ],
    
