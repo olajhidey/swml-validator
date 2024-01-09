@@ -2,7 +2,7 @@
   "name": "swml-validator",
   "displayName": "SWML-Validator",
   "description": "A Visual studio code extension used to validate SignalWire Markup Language",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "publisher": "Awoyinkaolajide",
   "repository": {
     "url": "https://github.com/olajhidey/swml-validator"
@@ -31,18 +31,18 @@
     "yamlValidation": [
       {
         "fileMatch": "/*.yaml",
-        "url": "./schema/swml-schema.json"
+        "url": "./schema/test.json"
       },
 
       {
         "fileMatch": "/*.yml",
-        "url": "./schema/swml-schema.json"
+        "url": "./schema/test.json"
       }
     ],
     "jsonValidation": [
       {
         "fileMatch": "/*.json",
-        "url": "./schema/swml-schema.json"
+        "url": "./schema/test.json"
       }
     ],
    
