@@ -1,3 +1,4 @@
+
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://docs.signalwire.com/swml.schema.json",
@@ -598,6 +599,21 @@
           "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Optional. Default is not set.",
           "type": "string"
         },
+        "wait_file": {
+          "description": "A file to play while the function is running. `wait_file_loops` can specify the amount of times that files should continously play. Optional. Default is not set.",
+          "type": "string"
+        },
+        "wait_file_loops": {
+          "description": "The amount of times that wait_file should continously play/loop. Optional. Default is not set.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
         "web_hook_auth_user": {
           "description": "Function-specific auth username for web_hook_url endpoint. Takes precedence over a default setting. Optional. Default is not set.",
           "type": "string"
@@ -660,6 +676,69 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/ai_data_map_expression_item"
+          }
+        },
+        "output": {
+          "description": "Defines the response or action to be taken when the pattern matches.",
+          "type": "object",
+          "properties": {
+            "response": {
+              "description": "A static response text or message.",
+              "type": "string"
+            },
+            "action": {
+              "description": "A list of actions to be performed upon matching.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ai_data_map_action_item"
+              }
+            }
+          }
+        },
+        "webhooks": {
+          "description": "An array of objects that define external API calls.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ai_webhooks_item"
+          }
+        }
+      }
+    },
+    "ai_webhooks_item": {
+      "title": "A single webhook item",
+      "type": "object",
+      "properties": {
+        "expressions": {
+          "description": "A list of expressions to be evaluated upon matching.",
+          "$ref": "#/$defs/ai_data_map_expression_item"
+        },
+        "url": {
+          "description": "The endpoint for the external service or API.",
+          "type": "string"
+        },
+        "headers": {
+          "description": "Any necessary headers for the API call.",
+          "type": "object"
+        },
+        "method": {
+          "description": "The HTTP method (GET, POST, etc.) for the API call.",
+          "type": "string"
+        },
+        "output": {
+          "description": "Defines the response or action to be taken when the pattern matches.",
+          "type": "object",
+          "properties": {
+            "response": {
+              "description": "A static response text or message.",
+              "type": "string"
+            },
+            "action": {
+              "description": "A list of actions to be performed upon matching.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ai_data_map_action_item"
+              }
+            }
           }
         }
       }
@@ -2835,6 +2914,11 @@
                   ],
                   "additionalProperties": false,
                   "properties": {
+                    "agent_meta_data": {
+                      "title": "agent_meta_data",
+                      "description": "A powerful and flexible environmental variable which can accept arbitrary data. All contained information can be accessed and expanded within the prompt - for example, by using a template string.",
+                      "type": "object"
+                    },
                     "prompt": {
                       "title": "prompt",
                       "description": "Context used to start the conversation. Also know as assistant prompt.\nExample:\n```\nYour name is Franklin and you are taking orders for Franklin's Pizza.\nThe menu is as follows:\n  small pizza: $13.99\n  med pizza: $15.99\n  large pizza: $19.99\n  toppings: $1.50\n  bottle of coke: $1.99\navailable toppings: pepperoni, sausage, mushrooms, green olives, green peppers.\nEverything on the menu is available to order. You are never out of anything, you have an endless supply of everything.\nDo not let the user order anything that is not on the menu above.\nCollect the user's name and number and confirm the number of items before completing the order.\nStart by introducing yourself and ask if the user wants to place an order.\n```",
@@ -3053,174 +3137,6 @@
                           "$ref": "#/$defs/swaig_functions"
                         }
                       ]
-                    },
-                    "verbose_logs": {
-                      "title": "verbose_logs",
-                      "description": "Enable verbose logging.",
-                      "type": "boolean"
-                    },
-                    "hold_music": {
-                      "title": "hold_music",
-                      "description": "A URL for the hold music to play, accepting WAV, mp3, and FreeSWITCH tone_stream.",
-                      "type": "string"
-                    },
-                    "hold_on_process": {
-                      "title": "hold_on_process",
-                      "description": "Enables hold music during SWAIG processing.",
-                      "type": "boolean"
-                    },
-                    "debug_webhook_url": {
-                      "title": "debug_webhook_url",
-                      "description": "Each interaction between the AI and end user is posted in real time to the established URL.",
-                      "type": "string"
-                    },
-                    "debug_webhook_level": {
-                      "title": "debug_webhook_level",
-                      "description": "Enables debugging to the set URL. If a URL is set, this param defaults to 1.",
-                      "type": "boolean"
-                    },
-                    "acknowledge_interruptions": {
-                      "oneOf": [
-                        {
-                          "title": "acknowledge_interruptions",
-                          "description": "Instructs the agent to acknowledge crosstalk and confirm user input when the user speaks over the agent.",
-                          "type": "boolean"
-                        },
-                        {
-                          "title": "acknowledge_interruptions",
-                          "description": "Instructs the agent to acknowledge crosstalk and confirm user input when the user speaks over the agent.",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "interrupt_prompt": {
-                      "title": "interrupt_prompt",
-                      "description": "Provide a prompt for the agent to handle crosstalk.",
-                      "type": "string"
-                    },
-                    "interrupt_on_noise": {
-                      "title": "interrupt_on_noise",
-                      "description": "When enabled, barges agent upon any sound interruption longer than 1 second.",
-                      "type": "boolean"
-                    },
-                    "input_poll_freq": {
-                      "title": "input_poll_freq",
-                      "description": "Check for input function with check_for_input. Example use case: Feeding an inbound SMS to AI on a voice call, eg., for collecting an email address or other complex information.",
-                      "type": "string"
-                    },
-                    "ai_volume": {
-                      "title": "ai_volume",
-                      "description": "Set the AI volume with numerical values between -50 and +50.",
-                      "type": "string"
-                    },
-                    "barge_match_string": {
-                      "title": "barge_match_string",
-                      "description": "Takes a string, including a regular expression, defining barge behavior. For example, this param can direct the AI to stop when the word \"hippopotomus\" is input.",
-                      "type": "string"
-                    },
-                    "barge_min_words": {
-                      "title": "barge_min_words",
-                      "description": "Defines the number of words that must be input before triggering barge behavior, in a range of 1-99.",
-                      "type": "string"
-                    },
-                    "swaig_allow_swml": {
-                      "title": "swaig_allow_swml",
-                      "description": "Allows your SWAIG to return SWML to be executed.",
-                      "type": "boolean"
-                    },
-                    "swaig_allow_settings": {
-                      "title": "swaig_allow_settings",
-                      "description": "\tAllows tweaking any of the indicated settings, such as barge_match_string, using the returned SWML from the SWAIG function.",
-                      "type": "boolean"
-                    },
-                    "swaig_post_conversation": {
-                      "title": "swaig_post_conversation",
-                      "description": "Post entire conversation to any SWAIG call.",
-                      "type": "boolean"
-                    },
-                    "conversation_id": {
-                      "title": "conversation_id",
-                      "description": "Used by check_for_input and save_conversation to identify an individual conversation.",
-                      "type": "string"
-                    },
-                    "transfer_summary": {
-                      "title": "transfer_summary",
-                      "description": "Pass a summary of a conversation from one AI agent to another. For example, transfer a call summary between support agents in two departments.",
-                      "type": "boolean"
-                    },
-                    "save_conversation": {
-                      "title": "save_conversation",
-                      "description": "Performs an additional call to save the current conversation summary by conversation ID. Use this param to preserve conversation context between calls.",
-                      "type": "boolean"
-                    },
-                    "local_tz": {
-                      "title": "local_tz",
-                      "description": "Takes a time zone string. For example: UTC+5, America/New_York, or any other convention defined by the International Bureau of Weights and Measures (BIPM).",
-                      "type": "string"
-                    },
-                    "background_file": {
-                      "title": "background_file",
-                      "description": "Defines a file via URL to play background noise.",
-                      "type": "string"
-                    },
-                    "background_file_loops": {
-                      "title": "background_file_loops",
-                      "description": "Sets background_file behavior to loop if true.",
-                      "type": "boolean"
-                    },
-                    "background_file_volume": {
-                      "title": "background_file_volume",
-                      "description": "Defines background_file volume within a range of -50 to +50.",
-                      "type": "string"
-                    },
-                    "digit_timeout": {
-                      "title": "digit_timeout",
-                      "description": "Sets time duration to wait for DTMF before timing out, in a range from 1 to 30000 milliseconds.",
-                      "type": "string"
-                    },
-                    "digit_terminators": {
-                      "title": "digit_terminators",
-                      "description": "Sets a digit, such as a pound (#) sign, to terminate input. Fun fact: The pound sign is also known as an \"octothorp.\"",
-                      "type": "string"
-                    },
-                    "end_of_speech_timeout": {
-                      "title": "end_of_speech_timeout",
-                      "description": "Sets a time duration for the agent to wait after speech before timing out, in a range between 250 to 10000 milliseconds.",
-                      "type": "string"
-                    },
-                    "energy_level": {
-                      "title": "energy_level",
-                      "description": "Sets voice detection threshold for user speech, in a range from 0 to 100 dB.",
-                      "type": "string"
-                    },
-                    "attention_timeout": {
-                      "title": "attention_timeout",
-                      "description": "Sets a time duration for the user to respond to the AI agent before timeout, in a range from 10000 to 600000, or 0 milliseconds.",
-                      "type": "string"
-                    },
-                    "inactivity_timeout": {
-                      "title": "inactivity_timeout",
-                      "description": "Sets a time duration for the user to speak before timeout, in a range from 10000 to 3600000.",
-                      "type": "string"
-                    },
-                    "outbound_attention_timeout": {
-                      "title": "outbound_attention_timeout",
-                      "description": "Sets a time duration for the outbound call recipient to respond to the AI agent before timeout, in a range from 10000 to 600000.",
-                      "type": "string"
-                    },
-                    "languages_enabled": {
-                      "title": "languages_enabled",
-                      "description": "\tAllows multilingualism when true.",
-                      "type": "boolean"
-                    },
-                    "conscience": {
-                      "type": "string",
-                      "description": "Sets the prompt which binds the agent to its purpose."
-                    },
-                    "agent_meta_data": {
-                      "title": "agent_meta_data",
-                      "description": "A powerful and flexible environmental variable which can accept arbitrary data. All contained information can be accessed and expanded within the prompt - for example, by using a template string.",
-                      "type": "object"
                     }
                   }
                 }
@@ -3242,7 +3158,7 @@
         },
         {
           "title": "`return`",
-          "description": "Return from execution. Ends script / call if executed in `main` section.\n\nParameters obey variable substitution.\n\nThe following variables are set by this function:\n- `return_value`: parameters after substitution.",
+          "description": "Return from execution. Ends script / call if executed in `main` section.\nParameters obey variable substitution.\nThe following variables are set by this function:\n- `return_value`: parameters after substitution.",
           "type": "object",
           "required": [
             "return"
