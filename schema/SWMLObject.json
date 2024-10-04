@@ -12,7 +12,6 @@
     }
   },
   "required": [
-    "version",
     "sections"
   ],
   "$defs": {
@@ -48,6 +47,9 @@
           "$ref": "#/$defs/Cond"
         },
         {
+          "$ref": "#/$defs/Connect"
+        },
+        {
           "$ref": "#/$defs/Denoise"
         },
         {
@@ -64,9 +66,6 @@
         },
         {
           "$ref": "#/$defs/LiveTranslate"
-        },
-        {
-          "$ref": "#/$defs/If"
         },
         {
           "$ref": "#/$defs/Hangup"
@@ -133,9 +132,6 @@
         },
         {
           "$ref": "#/$defs/Unset"
-        },
-        {
-          "$ref": "#/$defs/NoArgSWMLMethod"
         }
       ]
     },
@@ -194,14 +190,6 @@
               "$ref": "#/$defs/AIParams",
               "description": "A JSON object containing parameters as key-value pairs."
             },
-            "post_prompt_auth_password": {
-              "type": "string",
-              "description": "Auth password for `post_url` endpoint."
-            },
-            "post_prompt_auth_user": {
-              "type": "string",
-              "description": "Auth username for `post_url` endpoint."
-            },
             "post_prompt": {
               "$ref": "#/$defs/AIPrompt",
               "description": "The final set of instructions and configuration settings to send to the agent."
@@ -209,7 +197,7 @@
             "post_prompt_url": {
               "type": "string",
               "format": "uri",
-              "description": "The URL to which to send status callbacks and reports."
+              "description": "The URL to which to send status callbacks and reports. Authentication can also be set in the url in the format of `username:password@url`."
             },
             "pronounce": {
               "type": "array",
@@ -243,38 +231,41 @@
       "type": "object",
       "properties": {
         "cond": {
-          "type": "object",
-          "properties": {
-            "when": {
-              "type": "string",
-              "description": "The condition to be evaluated and act on."
-            },
-            "then": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/SWMLMethod"
-              },
-              "description": "The list of SWML instructions to be executed if the condition is `true`"
-            },
-            "else": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/SWMLMethod"
-              },
-              "description": "The list of SWML instructions to be executed if the condition is `false`."
-            }
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CondParams"
           },
-          "required": [
-            "when",
-            "then",
-            "else"
-          ],
-          "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
-          "additionalProperties": false
+          "description": "Execute a sequence of instructions depending on the value of a JavaScript condition."
         }
       },
       "required": [
         "cond"
+      ],
+      "additionalProperties": false
+    },
+    "Connect": {
+      "type": "object",
+      "properties": {
+        "connect": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ConnectDeviceSingle"
+            },
+            {
+              "$ref": "#/$defs/ConnectDeviceSerial"
+            },
+            {
+              "$ref": "#/$defs/ConnectDeviceParallel"
+            },
+            {
+              "$ref": "#/$defs/ConnectDeviceSerialParallel"
+            }
+          ],
+          "description": "Dial a SIP URI or phone number."
+        }
+      },
+      "required": [
+        "connect"
       ],
       "additionalProperties": false
     },
@@ -325,13 +316,14 @@
             "result": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/Switch"
+                  "$ref": "#/$defs/ExecuteSwitch"
                 },
                 {
                   "type": "array",
                   "items": {
-                    "$ref": "#/$defs/Cond"
-                  }
+                    "$ref": "#/$defs/CondParams"
+                  },
+                  "description": "Execute a sequence of instructions depending on the value of a JavaScript condition."
                 }
               ],
               "description": "`switch` on `return_value` if result is an object (`{}`), or use as a cond if result is an array (`[]`)"
@@ -447,43 +439,6 @@
       ],
       "additionalProperties": false
     },
-    "If": {
-      "type": "object",
-      "properties": {
-        "if": {
-          "type": "object",
-          "properties": {
-            "condition": {
-              "type": "string",
-              "description": "The condition to be evaluated and act on."
-            },
-            "then": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/SWMLMethod"
-              },
-              "description": "The list of SWML instructions to be executed if the condition is true."
-            },
-            "else": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/SWMLMethod"
-              },
-              "description": "The list of SWML instructions to be executed if the condition is `false`."
-            }
-          },
-          "required": [
-            "condition"
-          ],
-          "description": "Conditional execution of a sequence of instructions based on a condition.",
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "if"
-      ],
-      "additionalProperties": false
-    },
     "Hangup": {
       "type": "object",
       "properties": {
@@ -526,20 +481,6 @@
             "name": {
               "type": "string",
               "description": "The name of the room to join."
-            },
-            "result": {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Switch"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/$defs/Cond"
-                  }
-                }
-              ],
-              "description": "`switch` on return_value when object `{}` or `cond` when array `[]`"
             }
           },
           "required": [
@@ -583,12 +524,12 @@
             "play": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "$ref": "#/$defs/play_url"
                 },
                 {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/$defs/play_url"
                   }
                 }
               ],
@@ -636,7 +577,7 @@
               "type": "number",
               "description": "Time in seconds to wait for end of speech utterance."
             },
-            "speech_langauge": {
+            "speech_language": {
               "type": "string",
               "description": "Language to detect speech in."
             },
@@ -653,20 +594,6 @@
                 "type": "string"
               },
               "description": "The engine that is selected for speech recognition. The engine must support the specified language.\n[Deepgram|Google| etc...] Default is not set (SignalWire picks the engine)."
-            },
-            "result": {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/Switch"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/$defs/Cond"
-                  }
-                }
-              ],
-              "description": "`switch` on `return_value` if result is an object (`{}`), or use as a cond if result is an array (`[]`)"
             }
           },
           "required": [
@@ -942,9 +869,6 @@
       "type": "object",
       "properties": {
         "return": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": {},
           "description": "Return from `execute` or exit script. Takes user-defined key to be used to store the value."
         }
       },
@@ -1047,17 +971,9 @@
       "type": "object",
       "properties": {
         "sleep": {
-          "oneOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "string",
-              "const": "forever"
-            }
-          ],
-          "minimum": 0,
-          "description": "The amount of time to sleep in milliseconds. Must be a `positive integer`. Can also be set to a `forever` string for the sleep to never end."
+          "type": "integer",
+          "minimum": -1,
+          "description": "The amount of time to sleep in milliseconds. Must be a `positive integer`. Can also be set to a `-1` integer for the sleep to never end."
         }
       },
       "required": [
@@ -1074,10 +990,6 @@
             "to_uri": {
               "type": "string",
               "description": "The SIP URI to send the REFER to."
-            },
-            "to": {
-              "type": "string",
-              "description": "The target destination for the SIP REFER."
             }
           },
           "description": "Send SIP REFER to a SIP call.",
@@ -1174,7 +1086,8 @@
             }
           },
           "required": [
-            "variable"
+            "variable",
+            "case"
           ],
           "description": "Execute a sequence of instructions depending on which value matches a variable.",
           "additionalProperties": false
@@ -1314,61 +1227,20 @@
       ],
       "additionalProperties": false
     },
-    "NoArgSWMLMethod": {
-      "type": "string",
-      "enum": [
-        "answer",
-        "hangup",
-        "record",
-        "stop_record_call",
-        "denoise",
-        "stop_denoise",
-        "receive_fax",
-        "return",
-        "stop_tap"
-      ],
-      "description": "Union of SWML methods that can be passed with no arguments."
-    },
     "Languages": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Name of the language ('French', 'English', etc)."
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LanguagesWithSoloFillers"
         },
-        "code": {
-          "type": "string",
-          "description": "Language code. For example, 'fr-FR'."
-        },
-        "voice": {
-          "type": "string",
-          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
-        },
-        "function_fillers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings to be used as fillers in the conversation when calling a `swaig function`. This helps the AI break silence between responses."
-        },
-        "speech_fillers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings to be used as fillers in the conversation. This helps the AI break silence between responses."
-        },
-        "engine": {
-          "type": "string",
-          "description": "The engine to use for the language. For example, 'elevenlabs'."
+        {
+          "$ref": "#/$defs/LanguagesWithFillers"
         }
-      },
-      "additionalProperties": false
+      ]
     },
     "AIParams": {
       "type": "object",
       "properties": {
-        "acknowledge_crosstalk": {
+        "acknowledge_interruptions": {
           "type": "boolean",
           "description": "Instructs the agent to acknowledge crosstalk and confirm user input when the user speaks over the agent."
         },
@@ -1378,7 +1250,7 @@
           "maximum": 50,
           "description": "Adjust the volume of the AI. Allowed values from `-50` - `50`."
         },
-        "prompt_timeout": {
+        "attention_timeout": {
           "anyOf": [
             {
               "type": "integer"
@@ -1396,7 +1268,7 @@
           "type": "string",
           "description": "A custom prompt that is fed into the AI when the attention_timeout is reached."
         },
-        "background_audio": {
+        "background_file": {
           "type": "string",
           "format": "uri",
           "description": "URL of audio file to play in the background while AI plays in foreground."
@@ -1440,7 +1312,7 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 1,
-          "description": "Enables debugging to the set URL. If a URL is set, this param defaults to 1."
+          "description": "Enables debugging to the set URL. Allowed values from `0` - `1`."
         },
         "debug_webhook_url": {
           "type": "string",
@@ -1470,8 +1342,16 @@
           "maximum": 10000,
           "description": "Amount of silence, in ms, at the end of an utterance to detect end of speech. Allowed values from `250` - `10,000`."
         },
+        "eleven_labs_stability": {
+          "type": "number",
+          "description": "The stability slider determines how stable the voice is and the randomness between each generation. Lowering this slider introduces a broader emotional range for the voice."
+        },
+        "eleven_labs_similarity": {
+          "type": "number",
+          "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it. The higher the similarity, the closer the AI will sound to the original voice."
+        },
         "energy_level": {
-          "type": "integer",
+          "type": "number",
           "minimum": 0,
           "maximum": 100,
           "description": "Amount of energy necessary for bot to hear you (in dB). Allowed values from `0.0` - `100.0`."
@@ -1644,6 +1524,130 @@
       },
       "additionalProperties": false
     },
+    "CondParams": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CondReg"
+        },
+        {
+          "$ref": "#/$defs/CondElse"
+        }
+      ]
+    },
+    "ConnectDeviceSingle": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "string",
+          "description": "The SIP URI or phone number to dial."
+        }
+      },
+      "required": [
+        "to"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/ConnectDeviceBase"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "ConnectDeviceSerial": {
+      "type": "object",
+      "properties": {
+        "serial": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectDeviceSingle"
+          }
+        }
+      },
+      "required": [
+        "serial"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/ConnectDeviceBase"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "ConnectDeviceParallel": {
+      "type": "object",
+      "properties": {
+        "parallel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectDeviceSingle"
+          },
+          "description": "Array of destinations to dial simultaneously."
+        }
+      },
+      "required": [
+        "parallel"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/ConnectDeviceBase"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "ConnectDeviceSerialParallel": {
+      "type": "object",
+      "properties": {
+        "serial_parallel": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ConnectDeviceSingle"
+            }
+          },
+          "description": "Array of arrays.\nInner arrays contain destinations to dial simultaneously.\nOuter array attempts each parallel group in order."
+        }
+      },
+      "required": [
+        "serial_parallel"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/ConnectDeviceBase"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "ExecuteSwitch": {
+      "type": "object",
+      "properties": {
+        "variable": {
+          "type": "string",
+          "description": "Name of the variable whose value needs to be compared. If not provided, it will check the `return_value` variable.\nCan be one of the listed set of variables, or a string to represent a custom variable."
+        },
+        "case": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/SWMLMethod"
+            }
+          },
+          "description": "Object of values mapped to array of instructions to execute"
+        },
+        "default": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWMLMethod"
+          },
+          "description": "Array of instructions to execute if no cases match"
+        }
+      },
+      "required": [
+        "case"
+      ],
+      "additionalProperties": false
+    },
     "TranscribeAction": {
       "oneOf": [
         {
@@ -1684,7 +1688,7 @@
           "type": "boolean"
         },
         "volume": {
-          "type": "integer",
+          "type": "number",
           "minimum": -40,
           "maximum": 40,
           "description": "Volume level for the audio file.\nDefault is `0`.\nValid range is -40 to 40"
@@ -1702,7 +1706,7 @@
           "description": "Gender to use for the text to speech.\nDefault is `female`."
         },
         "url": {
-          "type": "string",
+          "$ref": "#/$defs/play_url",
           "description": "URL to play.\nRequired if `urls` is not present.\nAllowed URLs are:\n    - http:// or https:// - audio file to GET\n    - ring:[duration:]<country code> - ring tone to play. For example: ring:us to play single ring or ring:20.0:us to play ring for 20 seconds.\n    - say:<text to speak> - Sentence to say\n    - silence: <duration> - seconds of silence to play"
         }
       },
@@ -1719,7 +1723,7 @@
           "type": "boolean"
         },
         "volume": {
-          "type": "integer",
+          "type": "number",
           "minimum": -40,
           "maximum": 40,
           "description": "Volume level for the audio file.\nDefault is `0`.\nValid range is -40 to 40"
@@ -1739,7 +1743,7 @@
         "urls": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/play_url"
           },
           "description": "Array of URLs to play.\nRequired if `url` is not present.\nAllowed URLs are:\n    - http:// or https:// - audio file to GET\n    - ring:[duration:]<country code> - ring tone to play. For example: ring:us to play single ring or ring:20.0:us to play ring for 20 seconds.\n    - say:<text to speak> - Sentence to say\n    - silence: <duration> - seconds of silence to play"
         }
@@ -1748,6 +1752,10 @@
         "urls"
       ],
       "additionalProperties": false
+    },
+    "play_url": {
+      "type": "string",
+      "pattern": "^(http://.*|https://.*|ring: ?[0-9.]*: ?[a-zA-Z]{2}|say: ?.*|silence: ?[0-9.]*|ring: ?[a-zA-Z]{2})$"
     },
     "SMSWithBody": {
       "type": "object",
@@ -1799,6 +1807,84 @@
       ],
       "additionalProperties": false
     },
+    "LanguagesWithSoloFillers": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the language ('French', 'English', etc)."
+        },
+        "code": {
+          "type": "string",
+          "description": "Language code. For example, 'fr-FR'."
+        },
+        "voice": {
+          "type": "string",
+          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
+        },
+        "engine": {
+          "type": "string",
+          "description": "The engine to use for the language. For example, 'elevenlabs'.",
+          "deprecated": true
+        },
+        "fillers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings to be used as fillers in the conversation. This will be used for both speech and function fillers if provided.",
+          "deprecated": true
+        }
+      },
+      "required": [
+        "name",
+        "code",
+        "voice"
+      ],
+      "additionalProperties": false
+    },
+    "LanguagesWithFillers": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the language ('French', 'English', etc)."
+        },
+        "code": {
+          "type": "string",
+          "description": "Language code. For example, 'fr-FR'."
+        },
+        "voice": {
+          "type": "string",
+          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
+        },
+        "engine": {
+          "type": "string",
+          "description": "The engine to use for the language. For example, 'elevenlabs'.",
+          "deprecated": true
+        },
+        "function_fillers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings to be used as fillers in the conversation when calling a `swaig function`. This helps the AI break silence between responses."
+        },
+        "speech_fillers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings to be used as fillers in the conversation. This helps the AI break silence between responses."
+        }
+      },
+      "required": [
+        "name",
+        "code",
+        "voice"
+      ],
+      "additionalProperties": false
+    },
     "Direction": {
       "type": "string",
       "enum": [
@@ -1811,15 +1897,7 @@
       "properties": {
         "web_hook_url": {
           "type": "string",
-          "description": "Default URL to send status callbacks and reports to. Default is not set."
-        },
-        "web_hook_auth_user": {
-          "type": "string",
-          "description": "Default auth username for `web_hook_url` endpoint. Default is not set."
-        },
-        "web_hook_auth_password": {
-          "type": "string",
-          "description": "Default auth password for `web_hook_url` endpoint. Default is not set."
+          "description": "Default URL to send status callbacks and reports to. Authentication can also be set in the url in the format of `username:password@url.`"
         }
       },
       "additionalProperties": false
@@ -1843,15 +1921,13 @@
         },
         "url": {
           "type": "string",
-          "description": "URL to fetch remote functions and include in your AI application."
+          "description": "URL to fetch remote functions and include in your AI application. Authentication can also be set in the url in the format of `username:password@url`."
         },
-        "user": {
-          "type": "string",
-          "description": "Username used for auth for the remote function URL."
-        },
-        "pass": {
-          "type": "string",
-          "description": "Password used for auth for the remote function URL."
+        "meta_data": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {},
+          "description": ""
         }
       },
       "required": [
@@ -1926,15 +2002,7 @@
         },
         "web_hook_url": {
           "type": "string",
-          "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Default is not set."
-        },
-        "web_hook_auth_user": {
-          "type": "string",
-          "description": "Auth username for `web_hook_url` endpoint. Default is not set."
-        },
-        "web_hook_auth_password": {
-          "type": "string",
-          "description": "Auth password for `web_hook_url` endpoint. Default is not set."
+          "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Authentication can also be set in the url in the format of `username:password@url.`"
         },
         "wait_file": {
           "type": "string",
@@ -1955,9 +2023,169 @@
       },
       "required": [
         "function",
-        "purpose",
-        "argument"
+        "purpose"
       ],
+      "additionalProperties": false
+    },
+    "CondReg": {
+      "type": "object",
+      "properties": {
+        "when": {
+          "type": "string",
+          "description": "The condition to be evaluated and act on."
+        },
+        "then": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWMLMethod"
+          },
+          "description": "The list of SWML instructions to be executed if the condition is `true`"
+        },
+        "else": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWMLMethod"
+          },
+          "description": "The list of SWML instructions to be executed if the condition is `false`."
+        }
+      },
+      "required": [
+        "when",
+        "then"
+      ],
+      "additionalProperties": false
+    },
+    "CondElse": {
+      "type": "object",
+      "properties": {
+        "else": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWMLMethod"
+          },
+          "description": "The list of SWML instructions to be executed if the condition is `false`."
+        }
+      },
+      "required": [
+        "else"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectDeviceBase": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The caller ID to use when dialing the number."
+        },
+        "headers": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {},
+          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
+        },
+        "codecs": {
+          "type": "string",
+          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "webrtc_media": {
+          "type": "boolean",
+          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
+        },
+        "session_timeout": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "ringback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of URIs to play as ringback tone."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConnectSwitch"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CondParams"
+              },
+              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition."
+            }
+          ],
+          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
+        },
+        "max_duration": {
+          "type": "integer",
+          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
+        },
+        "answer_on_bridge": {
+          "type": "boolean",
+          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
+        },
+        "call_state_url": {
+          "type": "string",
+          "description": "Webhook URL to send call state change notifications to for all legs. It can be overwritten on each destination."
+        },
+        "call_state_events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
+        },
+        "confirm": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ValidConfirmMethods"
+              }
+            }
+          ],
+          "description": "Confirmation object or string."
+        },
+        "confirm_timeout": {
+          "type": "integer",
+          "description": "Timeout for confirmation."
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for authentication."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for authentication."
+        },
+        "encryption": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "mandatory"
+            },
+            {
+              "type": "string",
+              "const": "optional"
+            },
+            {
+              "type": "string",
+              "const": "forbidden"
+            }
+          ],
+          "description": "Encryption setting to use."
+        }
+      },
       "additionalProperties": false
     },
     "TranscribeStartAction": {
@@ -2194,28 +2422,100 @@
       "additionalProperties": false
     },
     "DataMap": {
-      "type": "object",
-      "properties": {
-        "output": {
+      "oneOf": [
+        {
           "$ref": "#/$defs/Output",
           "description": "An object that defines the output of the SWAIG function."
         },
-        "expressions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Expression"
-          },
+        {
+          "$ref": "#/$defs/Expression",
           "description": "An array of objects that define patterns and corresponding actions."
         },
-        "webhooks": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Webhook"
-          },
+        {
+          "$ref": "#/$defs/Webhook",
           "description": "An array of objects that define external API calls."
         }
+      ]
+    },
+    "ConnectSwitch": {
+      "type": "object",
+      "properties": {
+        "variable": {
+          "type": "string",
+          "description": "Name of the variable whose value needs to be compared. If not provided, it will check the `connect_result` variable."
+        },
+        "case": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/SWMLMethod"
+            }
+          },
+          "description": "Object of values mapped to array of instructions to execute"
+        },
+        "default": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWMLMethod"
+          },
+          "description": "Array of instructions to execute if no cases match"
+        }
       },
+      "required": [
+        "case"
+      ],
       "additionalProperties": false
+    },
+    "ValidConfirmMethods": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Cond"
+        },
+        {
+          "$ref": "#/$defs/Set"
+        },
+        {
+          "$ref": "#/$defs/Unset"
+        },
+        {
+          "$ref": "#/$defs/Hangup"
+        },
+        {
+          "$ref": "#/$defs/Play"
+        },
+        {
+          "$ref": "#/$defs/Prompt"
+        },
+        {
+          "$ref": "#/$defs/Record"
+        },
+        {
+          "$ref": "#/$defs/RecordCall"
+        },
+        {
+          "$ref": "#/$defs/StopRecordCall"
+        },
+        {
+          "$ref": "#/$defs/Tap"
+        },
+        {
+          "$ref": "#/$defs/StopTap"
+        },
+        {
+          "$ref": "#/$defs/SendDigits"
+        },
+        {
+          "$ref": "#/$defs/SendSMS"
+        },
+        {
+          "$ref": "#/$defs/Denoise"
+        },
+        {
+          "$ref": "#/$defs/StopDenoise"
+        }
+      ]
     },
     "TranscribeDirection": {
       "type": "string",
@@ -2282,202 +2582,291 @@
     "Output": {
       "type": "object",
       "properties": {
-        "response": {
-          "type": "string",
-          "description": "A static response text or message returned to the AI agents context."
-        },
-        "action": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Action"
+        "output": {
+          "type": "object",
+          "properties": {
+            "response": {
+              "type": "string",
+              "description": "A static response text or message returned to the AI agents context."
+            },
+            "action": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Action"
+              },
+              "description": "A list of actions to be performed upon matching."
+            }
           },
-          "description": "A list of actions to be performed upon matching."
+          "required": [
+            "response"
+          ],
+          "description": "An object that defines the `response` or `action` to be taken when the webhook is successfully triggered.",
+          "additionalProperties": false
         }
       },
       "required": [
-        "response",
-        "action"
+        "output"
       ],
       "additionalProperties": false
     },
     "Expression": {
       "type": "object",
       "properties": {
-        "string": {
-          "type": "string",
-          "description": "The actual input or value from the user or system."
-        },
-        "pattern": {
-          "type": "string",
-          "description": "A regular expression pattern to validate or match the string."
-        },
-        "output": {
-          "$ref": "#/$defs/Output",
-          "description": "Defines the response or action to be taken when the pattern matches."
+        "expressions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "string": {
+                "type": "string",
+                "description": "The actual input or value from the user or system."
+              },
+              "pattern": {
+                "type": "string",
+                "description": "A regular expression pattern to validate or match the string."
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "response": {
+                    "type": "string",
+                    "description": "A static response text or message returned to the AI agents context."
+                  },
+                  "action": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Action"
+                    },
+                    "description": "A list of actions to be performed upon matching."
+                  }
+                },
+                "required": [
+                  "response"
+                ],
+                "description": "An object that defines the `response` or `action` to be taken when the webhook is successfully triggered.",
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "string",
+              "pattern",
+              "output"
+            ],
+            "additionalProperties": false
+          },
+          "description": "An array of objects that define patterns and corresponding actions."
         }
       },
       "required": [
-        "string",
-        "pattern",
-        "output"
+        "expressions"
       ],
       "additionalProperties": false
     },
     "Webhook": {
       "type": "object",
       "properties": {
-        "expressions": {
+        "webhooks": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Expression"
+            "type": "object",
+            "properties": {
+              "expressions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Expression"
+                },
+                "description": "A list of expressions to be evaluated upon matching."
+              },
+              "error_keys": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "A string or array of strings that represent the keys to be used for error handling. This will match the key(s) in the response from the API call."
+              },
+              "url": {
+                "type": "string",
+                "description": "The endpoint for the external service or API."
+              },
+              "foreach": {
+                "type": "object",
+                "properties": {
+                  "input_key": {
+                    "type": "string",
+                    "description": "The key to be used to access the current element in the array."
+                  },
+                  "output_key": {
+                    "type": "string",
+                    "description": "The key that can be referenced in the output of the `foreach` iteration. The values that are stored from `append` will be stored in this key."
+                  },
+                  "max": {
+                    "type": "integer",
+                    "description": "The max amount of elements that are iterated over in the array. This will start at the beginning of the array."
+                  },
+                  "append": {
+                    "type": "string",
+                    "description": "The values to append to the output_key. \nProperties from the object can be referenced and added to the output_key by using the following syntax: \n${this.property_name}.\nThe `this` keyword is used to reference the current object in the array."
+                  }
+                },
+                "required": [
+                  "input_key",
+                  "output_key",
+                  "append"
+                ],
+                "description": "Iterates over an array of objects and processes a output based on each element in the array. Works similarly to JavaScript's forEach method.",
+                "additionalProperties": false
+              },
+              "headers": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": {},
+                "description": "Any necessary headers for the API call."
+              },
+              "method": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "GET"
+                  },
+                  {
+                    "type": "string",
+                    "const": "POST"
+                  },
+                  {
+                    "type": "string",
+                    "const": "PUT"
+                  },
+                  {
+                    "type": "string",
+                    "const": "DELETE"
+                  }
+                ],
+                "description": "The HTTP method (GET, POST, etc.) for the API call."
+              },
+              "input_args_as_params": {
+                "type": "boolean",
+                "description": "A boolean to determine if the input arguments should be passed as parameters."
+              },
+              "params": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": {},
+                "description": "An object of any necessary parameters for the API call. The key is the parameter name and the value is the parameter value."
+              },
+              "require_args": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "A string or array of strings that represent the `arguments` that are required to make the webhook request."
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "response": {
+                    "type": "string",
+                    "description": "A static response text or message returned to the AI agents context."
+                  },
+                  "action": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Action"
+                    },
+                    "description": "A list of actions to be performed upon matching."
+                  }
+                },
+                "required": [
+                  "response"
+                ],
+                "description": "An object that defines the `response` or `action` to be taken when the webhook is successfully triggered.",
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "url",
+              "output"
+            ],
+            "additionalProperties": false
           },
-          "description": "A list of expressions to be evaluated upon matching."
-        },
-        "url": {
-          "type": "string",
-          "description": "The endpoint for the external service or API."
-        },
-        "headers": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": {},
-          "description": "Any necessary headers for the API call."
-        },
-        "method": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "GET"
-            },
-            {
-              "type": "string",
-              "const": "POST"
-            },
-            {
-              "type": "string",
-              "const": "PUT"
-            },
-            {
-              "type": "string",
-              "const": "DELETE"
-            }
-          ],
-          "description": "The HTTP method (GET, POST, etc.) for the API call."
-        },
-        "output": {
-          "$ref": "#/$defs/Output",
-          "description": "Defines the response or action to be taken when the webhook is successfully triggered."
+          "description": "An array of objects that define external API calls."
         }
       },
       "required": [
-        "expressions",
-        "url",
-        "output"
+        "webhooks"
       ],
       "additionalProperties": false
     },
     "Action": {
       "anyOf": [
         {
+          "$ref": "#/$defs/SWMLAction"
+        },
+        {
+          "$ref": "#/$defs/ContextSwitchAction"
+        },
+        {
+          "$ref": "#/$defs/PlaybackBGAction"
+        },
+        {
+          "$ref": "#/$defs/SayAction"
+        },
+        {
+          "$ref": "#/$defs/SetGlobalDataAction"
+        },
+        {
+          "$ref": "#/$defs/SetMetaDataAction"
+        },
+        {
+          "$ref": "#/$defs/StopAction"
+        },
+        {
+          "$ref": "#/$defs/StopPlaybackBGAction"
+        },
+        {
+          "$ref": "#/$defs/ToggleFunctionsAction"
+        },
+        {
+          "$ref": "#/$defs/UnsetGlobalDataAction"
+        },
+        {
+          "$ref": "#/$defs/UnsetMetaDataAction"
+        },
+        {
+          "$ref": "#/$defs/UserInputAction"
+        }
+      ]
+    },
+    "SWMLAction": {
+      "type": "object",
+      "properties": {
+        "SWML": {
           "description": "A SWML object to be executed.",
           "$ref": "SWMLObject.json"
-        },
-        {
-          "type": "string",
-          "description": "A message to be spoken by the AI agent."
-        },
-        {
-          "type": "boolean",
-          "description": "Whether to stop the conversation."
-        },
-        {
-          "type": "object",
-          "properties": {
-            "active": {
-              "type": "boolean",
-              "description": "Whether to activate or deactivate the functions. Default is `true`"
-            },
-            "function": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "The function names to toggle."
-            }
-          },
-          "required": [
-            "active",
-            "function"
-          ],
-          "description": "Whether to toggle the functions on or off.",
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": {},
-          "description": "A JSON object containing any global data, as a key-value map. This action sets the data in the `global_meta_data` to be globally referenced."
-        },
-        {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": {},
-          "description": "A JSON object containing any metadata, as a key-value map. This action sets the data in the `meta_data` to be referenced locally in the function."
-        },
-        {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "properties": {},
-              "additionalProperties": false
-            }
-          ],
-          "description": "The key of the global data to unset from the `global_meta_data`. You can also reset the `global_meta_data` by passing in a new object."
-        },
-        {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "properties": {},
-              "additionalProperties": false
-            }
-          ],
-          "description": "The key of the local data to unset from the `meta_data`. You can also reset the `meta_data` by passing in a new object."
-        },
-        {
-          "type": "object",
-          "properties": {
-            "file": {
-              "type": "string",
-              "format": "uri",
-              "description": "URL or filepath of the audio file to play."
-            },
-            "wait": {
-              "type": "boolean",
-              "description": "Whether to wait for the audio file to finish playing before continuing. Default is `false`."
-            }
-          },
-          "required": [
-            "file"
-          ],
-          "description": "A JSON object containing the audio file to play.",
-          "additionalProperties": false
-        },
-        {
-          "type": "boolean",
-          "description": "Whether to stop the background audio file."
-        },
-        {
-          "type": "string",
-          "description": "Used to inject text into the users queue as if they input the data themselves."
-        },
-        {
+        }
+      },
+      "required": [
+        "SWML"
+      ],
+      "additionalProperties": false
+    },
+    "ContextSwitchAction": {
+      "type": "object",
+      "properties": {
+        "context_switch": {
           "type": "object",
           "properties": {
             "system_prompt": {
@@ -2499,7 +2888,206 @@
           "description": "A JSON object containing the context to switch to. Default is not set.",
           "additionalProperties": false
         }
-      ]
+      },
+      "required": [
+        "context_switch"
+      ],
+      "additionalProperties": false
+    },
+    "PlaybackBGAction": {
+      "type": "object",
+      "properties": {
+        "playback_bg": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL or filepath of the audio file to play."
+            },
+            "wait": {
+              "type": "boolean",
+              "description": "Whether to wait for the audio file to finish playing before continuing. Default is `false`."
+            }
+          },
+          "required": [
+            "file"
+          ],
+          "description": "A JSON object containing the audio file to play.",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "playback_bg"
+      ],
+      "additionalProperties": false
+    },
+    "SayAction": {
+      "type": "object",
+      "properties": {
+        "say": {
+          "type": "string",
+          "description": "A message to be spoken by the AI agent."
+        }
+      },
+      "required": [
+        "say"
+      ],
+      "additionalProperties": false
+    },
+    "SetGlobalDataAction": {
+      "type": "object",
+      "properties": {
+        "set_global_data": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {},
+          "description": "A JSON object containing any global data, as a key-value map. This action sets the data in the `global_meta_data` to be globally referenced."
+        }
+      },
+      "required": [
+        "set_global_data"
+      ],
+      "additionalProperties": false
+    },
+    "SetMetaDataAction": {
+      "type": "object",
+      "properties": {
+        "set_meta_data": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {},
+          "description": "A JSON object containing any metadata, as a key-value map. This action sets the data in the `meta_data` to be referenced locally in the function."
+        }
+      },
+      "required": [
+        "set_meta_data"
+      ],
+      "additionalProperties": false
+    },
+    "StopAction": {
+      "type": "object",
+      "properties": {
+        "stop": {
+          "type": "boolean",
+          "description": "Whether to stop the conversation."
+        }
+      },
+      "required": [
+        "stop"
+      ],
+      "additionalProperties": false
+    },
+    "StopPlaybackBGAction": {
+      "type": "object",
+      "properties": {
+        "stop_playback_bg": {
+          "type": "boolean",
+          "description": "Whether to stop the background audio file."
+        }
+      },
+      "required": [
+        "stop_playback_bg"
+      ],
+      "additionalProperties": false
+    },
+    "ToggleFunctionsAction": {
+      "type": "object",
+      "properties": {
+        "toggle_functions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "active": {
+                "type": "boolean",
+                "description": "Whether to activate or deactivate the functions. Default is `true`"
+              },
+              "function": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "The function names to toggle."
+              }
+            },
+            "required": [
+              "active",
+              "function"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Whether to toggle the functions on or off."
+        }
+      },
+      "required": [
+        "toggle_functions"
+      ],
+      "additionalProperties": false
+    },
+    "UnsetGlobalDataAction": {
+      "type": "object",
+      "properties": {
+        "unset_global_data": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          ],
+          "description": "The key of the global data to unset from the `global_meta_data`. You can also reset the `global_meta_data` by passing in a new object."
+        }
+      },
+      "required": [
+        "unset_global_data"
+      ],
+      "additionalProperties": false
+    },
+    "UnsetMetaDataAction": {
+      "type": "object",
+      "properties": {
+        "unset_meta_data": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          ],
+          "description": "The key of the local data to unset from the `meta_data`. You can also reset the `meta_data` by passing in a new object."
+        }
+      },
+      "required": [
+        "unset_meta_data"
+      ],
+      "additionalProperties": false
+    },
+    "UserInputAction": {
+      "type": "object",
+      "properties": {
+        "user_input": {
+          "type": "string",
+          "description": "Used to inject text into the users queue as if they input the data themselves."
+        }
+      },
+      "required": [
+        "user_input"
+      ],
+      "additionalProperties": false
     }
   },
   "additionalProperties": false
