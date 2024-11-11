@@ -191,7 +191,7 @@
               "description": "A JSON object containing parameters as key-value pairs."
             },
             "post_prompt": {
-              "$ref": "#/$defs/AIPrompt",
+              "$ref": "#/$defs/AIPostPrompt",
               "description": "The final set of instructions and configuration settings to send to the agent."
             },
             "post_prompt_url": {
@@ -1228,7 +1228,7 @@
       "additionalProperties": false
     },
     "Languages": {
-      "oneOf": [
+      "anyOf": [
         {
           "$ref": "#/$defs/LanguagesWithSoloFillers"
         },
@@ -1428,7 +1428,7 @@
       },
       "additionalProperties": false
     },
-    "AIPrompt": {
+    "AIPostPrompt": {
       "type": "object",
       "properties": {
         "text": {
@@ -1490,6 +1490,53 @@
       "required": [
         "replace",
         "with"
+      ],
+      "additionalProperties": false
+    },
+    "AIPrompt": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The instructions to send to the agent."
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "contexts": {
+          "$ref": "#/$defs/Contexts",
+          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
+        }
+      },
+      "required": [
+        "text"
       ],
       "additionalProperties": false
     },
@@ -1892,6 +1939,21 @@
         "outbound"
       ]
     },
+    "Contexts": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "$ref": "#/$defs/ContextSteps",
+          "description": "The default context to use at the beginning of the conversation. Additional context steps can be defined as any other key in the object."
+        }
+      },
+      "required": [
+        "default"
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/ContextSteps"
+      }
+    },
     "SWAIGDefaults": {
       "type": "object",
       "properties": {
@@ -2079,9 +2141,10 @@
           "description": "The caller ID to use when dialing the number."
         },
         "headers": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": {},
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectHeaders"
+          },
           "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
         },
         "codecs": {
@@ -2421,6 +2484,22 @@
       ],
       "additionalProperties": false
     },
+    "ContextSteps": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContextStepsParams"
+          },
+          "description": "An array of objects that define the steps in the context. These steps are used to define the flow of the conversation."
+        }
+      },
+      "required": [
+        "steps"
+      ],
+      "additionalProperties": false
+    },
     "DataMap": {
       "oneOf": [
         {
@@ -2436,6 +2515,24 @@
           "description": "An array of objects that define external API calls."
         }
       ]
+    },
+    "ConnectHeaders": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the header."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the header."
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
     },
     "ConnectSwitch": {
       "type": "object",
@@ -2578,6 +2675,16 @@
         "summarize"
       ],
       "additionalProperties": false
+    },
+    "ContextStepsParams": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ContextStepsEnd"
+        },
+        {
+          "$ref": "#/$defs/ContextStepsValidSteps"
+        }
+      ]
     },
     "Output": {
       "type": "object",
@@ -2807,6 +2914,97 @@
       },
       "required": [
         "webhooks"
+      ],
+      "additionalProperties": false
+    },
+    "ContextStepsEnd": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+        },
+        "text": {
+          "type": "string",
+          "description": "The prompt or instructions given to the AI at this step."
+        },
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of SWAIG.functions that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "end": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
+        }
+      },
+      "required": [
+        "name",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "ContextStepsValidSteps": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+        },
+        "text": {
+          "type": "string",
+          "description": "The prompt or instructions given to the AI at this step."
+        },
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of SWAIG.functions that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "valid_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
+        }
+      },
+      "required": [
+        "name",
+        "text"
       ],
       "additionalProperties": false
     },
