@@ -2,7 +2,7 @@
   "name": "swml-validator",
   "displayName": "SWML-Validator",
   "description": "A Visual studio code extension used to validate SignalWire Markup Language",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "publisher": "Awoyinkaolajide",
   "repository": {
     "url": "https://github.com/olajhidey/swml-validator"

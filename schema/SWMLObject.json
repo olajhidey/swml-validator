@@ -1408,11 +1408,19 @@
         },
         "eleven_labs_stability": {
           "type": "number",
+          "minimum": 0.01,
+          "maximum": 1,
           "description": "The stability slider determines how stable the voice is and the randomness between each generation. Lowering this slider introduces a broader emotional range for the voice."
         },
         "eleven_labs_similarity": {
           "type": "number",
+          "minimum": 0.01,
+          "maximum": 1,
           "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it. The higher the similarity, the closer the AI will sound to the original voice."
+        },
+        "enable_vision": {
+          "type": "boolean",
+          "description": "Enables visual input processing for the AI Agent. \nWhen set to `true`, the AI Agent will be able to utilize visual processing capabilities, while leveraging the `get_visual_input` function."
         },
         "energy_level": {
           "type": "number",
@@ -1434,6 +1442,12 @@
           "minimum": 10000,
           "maximum": 3600000,
           "description": "Amount of time, in ms, to wait before exiting the app due to inactivity. Allowed values from `10,000` - `3,600,000`."
+        },
+        "initial_sleep_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 300000,
+          "description": "Amount of time, in ms, to wait before starting the conversation. Allowed values from `0` - `300,000`."
         },
         "input_poll_freq": {
           "type": "string",
@@ -1650,6 +1664,10 @@
             "$ref": "#/$defs/SWAIGFunction"
           },
           "description": "An array of JSON objects to define functions that can be executed during the interaction with the AI. Default is not set.\nThe fields of this object are the six following."
+        },
+        "internal_fillers": {
+          "$ref": "#/$defs/SWAIGInternalFiller",
+          "description": "These are the internal fillers that can be executed during the interaction with the AI while utilizing internal functions."
         }
       },
       "title": "swaig",
@@ -2625,6 +2643,10 @@
             }
           ],
           "description": "The number of times to loop playing the file. Default is not set."
+        },
+        "wait_for_fillers": {
+          "type": "boolean",
+          "description": "Wait for fillers to finish before continuing. Default is not set."
         }
       },
       "required": [
@@ -2632,6 +2654,16 @@
         "description"
       ],
       "title": "functions",
+      "additionalProperties": false
+    },
+    "SWAIGInternalFiller": {
+      "type": "object",
+      "properties": {
+        "get_visual_input": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to visually process input that the AI Agent has captured."
+        }
+      },
       "additionalProperties": false
     },
     "CondReg": {
