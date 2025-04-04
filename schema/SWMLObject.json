@@ -134,6 +134,9 @@
         },
         {
           "$ref": "#/$defs/Unset"
+        },
+        {
+          "$ref": "#/$defs/Pay"
         }
       ],
       "title": "SWML methods"
@@ -619,6 +622,11 @@
                 "type": "string"
               },
               "description": "The engine that is selected for speech recognition. The engine must support the specified language.\n[Deepgram|Google| etc...] Default is not set (SignalWire picks the engine)."
+            },
+            "status_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "http or https URL to deliver prompt status events"
             }
           },
           "required": [
@@ -640,7 +648,13 @@
       "properties": {
         "receive_fax": {
           "type": "object",
-          "properties": {},
+          "properties": {
+            "status_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "http or https URL to deliver receive_fax status events"
+            }
+          },
           "description": "Receive a fax being delivered to this call.",
           "title": "receive_fax",
           "additionalProperties": false
@@ -795,6 +809,11 @@
             "max_length": {
               "type": "number",
               "description": "Maximum length of the recording in seconds."
+            },
+            "status_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "http or https URL to deliver record_call status events"
             }
           },
           "description": "Record call in the background.\nUnlike the `record` method, the `record_call` method will start the recording and continue executing the SWML script without allowing the recording to happen in the background.\nTo stop call recordings started with `record_call`, use the `stop_call_record` method.",
@@ -957,6 +976,11 @@
             "identity": {
               "type": "string",
               "description": "Station identity to report.\nDefault is the calling party's caller ID number."
+            },
+            "status_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "http or https URL to deliver send_fax status events"
             }
           },
           "required": [
@@ -1184,7 +1208,7 @@
                   "const": "both"
                 }
               ],
-              "description": "Direction of the audio to tap:\n    `speak` for what party says,\n    `listen` for what party hears,\n    `both` for what party hears and says.\n    Default is `both`"
+              "description": "Direction of the audio to tap:\n    `speak` for what party says,\n    `listen` for what party hears,\n    `both` for what party hears and says.\n    Default is `speak`"
             },
             "codec": {
               "anyOf": [
@@ -1202,6 +1226,11 @@
             "rtp_ptime": {
               "type": "integer",
               "description": "If `uri` is a `rtp://` this will set the packetization time of the media in milliseconds.\nDefault is `20` miliseconds."
+            },
+            "status_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "http or https URL to deliver tap status events"
             }
           },
           "required": [
@@ -1288,6 +1317,127 @@
         "unset"
       ],
       "title": "Unset object",
+      "additionalProperties": false
+    },
+    "Pay": {
+      "type": "object",
+      "properties": {
+        "pay": {
+          "type": "object",
+          "properties": {
+            "payment_connector_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "The URL to make POST requests with all the gathered payment details.\nThis URL is used to process the final payment transaction and return the results through the response.\n\nVisit https://developer.signalwire.com//swml/methods/pay/payment_connector_url for more important information."
+            },
+            "charge_amount": {
+              "type": "string",
+              "description": "The amount to charge against payment method passed in the request. `Float` value with no currency prefix passed as string."
+            },
+            "currency": {
+              "type": "string",
+              "description": "Uses the ISO 4217 currency code of the charge amount. Default is `usd`."
+            },
+            "description": {
+              "type": "string",
+              "description": "Custom description of the payment provided in the request."
+            },
+            "input": {
+              "type": "string",
+              "const": "dtmf",
+              "description": "The method of how to collect the payment details. Currently only `dtmf` mode is supported."
+            },
+            "language": {
+              "type": "string",
+              "description": "The language of the payment prompt. Default is `en-US`.\n\nSupported languages can be found here: https://developer.signalwire.com/swml/methods/pay/language"
+            },
+            "max_attempts": {
+              "type": "integer",
+              "description": "Number of times the `pay` method will retry to collect payment details. Default is `1`."
+            },
+            "min_postal_code_length": {
+              "type": "integer",
+              "description": "The minimum length of the postal code the user must enter. Default is `0`."
+            },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/PayParameters"
+              },
+              "description": "Array of parameter objects to pass to your payment processor. The parameters are user-defined key-value pairs."
+            },
+            "payment_method": {
+              "type": "string",
+              "const": "credit-card",
+              "description": "Indicates the payment method which is going to be used in this payment request. Currently only `credit-card` is supported."
+            },
+            "postal_code": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "Takes `true`, `false` or real postalcode (if it's known beforehand) to let pay method know whether to prompt for postal code."
+            },
+            "prompts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/PayPrompts"
+              },
+              "description": "Array of prompt objects for customizing the audio prompts during different stages of the payment process."
+            },
+            "security_code": {
+              "type": "boolean",
+              "description": "Takes true or false to let pay method know whether to prompt for security code. Default is `true`."
+            },
+            "status_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "The URL to send requests for each status change during the payment process.\n\nSee http://localhost:3000/swml/methods/pay#status_url_request_body for more important information."
+            },
+            "timeout": {
+              "type": "integer",
+              "description": "Limit in seconds that pay method waits for the caller to press another digit before moving on to validate the digits captured."
+            },
+            "token_type": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "one-time"
+                },
+                {
+                  "type": "string",
+                  "const": "reusable"
+                }
+              ],
+              "description": "Whether the payment is a one off payment or re-occurring. Default is `reusable`.\n\nAllowed values: \n- `one-time`\n- `reusable`"
+            },
+            "valid_card_types": {
+              "type": "string",
+              "description": "List of payment cards allowed to use in the requested payment process separated by space.\n\nAllowed values: \n- `visa`\n- `mastercard`\n- `amex`\n- `maestro`\n- `discover`\n- `jcb`\n- `diners-club`"
+            },
+            "error_type": {
+              "type": "string",
+              "description": "Space-separated list of error types this prompt applies to.\n\nAllowed Error Types: \n- `payment-card-number` - Collect the payment card number.\n- `expiration-date` - Collect the payment card expiration date.\n- `security-code` - Collect the payment card security code.\n- `postal-code` - Collect the payment card postal code.\n- `payment-processing` - The step used during the payment processing.\n- `payment-completed` - The step used when the payment is completed.\n- `payment-failed` - The step used when the payment fails.\n- `payment-canceled` - The step used when the payment is cancelled."
+            },
+            "voice": {
+              "type": "string",
+              "description": "Text-to-speech voice to use. Defaults is 'woman'. Please refer to https://developer.signalwire.com//voice/getting-started/voice-and-languages for more information."
+            }
+          },
+          "required": [
+            "payment_connector_url"
+          ],
+          "description": "The `pay` object. Enables secure payment processing during a call.\n When implemented, it handles the complete payment flow including data collection, validation, and processing through your configured\n payment gateway.",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "pay"
+      ],
       "additionalProperties": false
     },
     "Languages": {
@@ -1427,6 +1577,19 @@
           "minimum": 0,
           "maximum": 100,
           "description": "Amount of energy necessary for bot to hear you (in dB). Allowed values from `0.0` - `100.0`."
+        },
+        "function_wait_for_talking": {
+          "type": "boolean",
+          "description": "If `true`, the AI will wait for any `filler` to finish playing before executing a function. \nIf `false`, the AI will execute a function asynchronously as the `filler` plays. \nDefault is `false`."
+        },
+        "hard_stop_prompt": {
+          "type": "string",
+          "description": "A final prompt that is fed into the AI when the `hard_stop_time` is reached."
+        },
+        "hard_stop_time": {
+          "type": "string",
+          "pattern": "^(?:\\d+h)?(?:\\d+m)?(?:\\d+s)?$",
+          "description": "Specifies the maximum duration fopr the AI Agent to remain active before it exists the session. \nAfter the timeout, the AI will stop responding, and will proceed with the next SWML instruction.\n\n**Time Format:**\n  - Seconds Format: `30s`\n  - Minutes Format: `2m`\n  - Hours Format: `1h`\n  - Combined Format: `1h45m30s`"
         },
         "hold_music": {
           "type": "string",
@@ -1773,7 +1936,7 @@
         },
         "confirm_timeout": {
           "type": "integer",
-          "description": "Timeout for confirmation."
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
         },
         "username": {
           "type": "string",
@@ -1798,7 +1961,12 @@
               "const": "forbidden"
             }
           ],
-          "description": "Encryption setting to use."
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver connect status events"
         },
         "to": {
           "type": "string",
@@ -1900,7 +2068,7 @@
         },
         "confirm_timeout": {
           "type": "integer",
-          "description": "Timeout for confirmation."
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
         },
         "username": {
           "type": "string",
@@ -1925,7 +2093,12 @@
               "const": "forbidden"
             }
           ],
-          "description": "Encryption setting to use."
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver connect status events"
         },
         "serial": {
           "type": "array",
@@ -2029,7 +2202,7 @@
         },
         "confirm_timeout": {
           "type": "integer",
-          "description": "Timeout for confirmation."
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
         },
         "username": {
           "type": "string",
@@ -2054,7 +2227,12 @@
               "const": "forbidden"
             }
           ],
-          "description": "Encryption setting to use."
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver connect status events"
         },
         "parallel": {
           "type": "array",
@@ -2159,7 +2337,7 @@
         },
         "confirm_timeout": {
           "type": "integer",
-          "description": "Timeout for confirmation."
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
         },
         "username": {
           "type": "string",
@@ -2184,7 +2362,12 @@
               "const": "forbidden"
             }
           ],
-          "description": "Encryption setting to use."
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver connect status events"
         },
         "serial_parallel": {
           "type": "array",
@@ -2274,7 +2457,8 @@
       "type": "object",
       "properties": {
         "auto_answer": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "If `true`, the call will automatically answer as the sound is playing. If `false`, you will start playing the audio during early media"
         },
         "volume": {
           "type": "number",
@@ -2293,6 +2477,11 @@
         "say_gender": {
           "type": "string",
           "description": "Gender to use for the text to speech.\nDefault is `female`."
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver play status events"
         },
         "url": {
           "$ref": "#/$defs/play_url",
@@ -2310,7 +2499,8 @@
       "type": "object",
       "properties": {
         "auto_answer": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "If `true`, the call will automatically answer as the sound is playing. If `false`, you will start playing the audio during early media"
         },
         "volume": {
           "type": "number",
@@ -2329,6 +2519,11 @@
         "say_gender": {
           "type": "string",
           "description": "Gender to use for the text to speech.\nDefault is `female`."
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver play status events"
         },
         "urls": {
           "type": "array",
@@ -2423,6 +2618,57 @@
         "media"
       ],
       "title": "SMSWithMedia object",
+      "additionalProperties": false
+    },
+    "PayParameters": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The identifier for your custom parameter. This will be the key in the parameters object."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value associated with the parameter. This will be the value in the parameters object."
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "PayPrompts": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PayPromptAction"
+          },
+          "description": "Array of action objects to execute for this prompt. These actions can either play an audio file or speak a phrase."
+        },
+        "for": {
+          "type": "string",
+          "description": "The payment step this prompt is for. See Payment Steps for a list of available steps.\n\n- `payment-card-number`: Collect the payment card number.\n- `expiration-date`: Collect the payment card expiration date.\n- `security-code`: Collect the payment card security code.\n- `postal-code`: Collect the payment card postal code.\n- `payment-processing`: The step used during the payment processing.\n- `payment-completed`: The step used when the payment is completed.\n- `payment-failed`: The step used when the payment fails.\n- `payment-cancelled`: The step used when the payment is cancelled."
+        },
+        "attempts": {
+          "type": "string",
+          "description": "Specifies which payment attempt(s) this prompt applies to. The value increments when a payment fails.\n Use a single number (e.g., \"1\") or space-separated numbers (e.g., \"2 3\") to target the specific attempts."
+        },
+        "card_type": {
+          "type": "string",
+          "description": "Space-seperated list of card types that are allowed to be used for this prompt.\n\nSupported card types:\n    - `visa`\n    - `mastercard`\n    - `amex`\n    - `maestro`\n    - `discover`\n    - `optima`\n    - `jcb`\n    - `diners-club`\n    - `enroute`"
+        },
+        "error_type": {
+          "type": "string",
+          "description": "Space-separated list of error types this prompt applies to\n\nAvailable error types:\n    - `timeout` - User input timeout\n    - `invalid-card-number` - Failed card validation\n    - `invalid-card-type` - Unsupported card type\n    - `invalid-date` - Invalid expiration date\n    - `invalid-security-code` - Invalid CVV format\n    - `invalid-postal-code` - Invalid postal code format\n    - `session-in-progress` - Concurrent session attempt\n    - `card-declined` - Payment declined\n"
+        }
+      },
+      "required": [
+        "actions",
+        "for"
+      ],
       "additionalProperties": false
     },
     "LanguagesWithSoloFillers": {
@@ -3020,6 +3266,16 @@
       ],
       "title": "InjectAction object",
       "additionalProperties": false
+    },
+    "PayPromptAction": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PayPromptSayAction"
+        },
+        {
+          "$ref": "#/$defs/PayPromptPlayAction"
+        }
+      ]
     },
     "ContextSteps": {
       "type": "object",
@@ -4045,6 +4301,62 @@
       "title": "SummarizeAction object",
       "additionalProperties": false
     },
+    "PayPromptSayAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "Say"
+            },
+            {
+              "type": "string",
+              "const": "Play"
+            }
+          ],
+          "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
+        },
+        "phrase": {
+          "type": "string",
+          "description": "The phrase to speak"
+        }
+      },
+      "required": [
+        "type",
+        "phrase"
+      ],
+      "additionalProperties": false
+    },
+    "PayPromptPlayAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "Say"
+            },
+            {
+              "type": "string",
+              "const": "Play"
+            }
+          ],
+          "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
+        },
+        "phrase": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^(http|https)://",
+          "description": "The URL of the audio file to play"
+        }
+      },
+      "required": [
+        "type",
+        "phrase"
+      ],
+      "additionalProperties": false
+    },
     "ContextStepsParams": {
       "anyOf": [
         {
@@ -4278,7 +4590,7 @@
           "items": {
             "type": "string"
           },
-          "description": "An array of SWAIG.functions that can be executed from this step."
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
         },
         "valid_contexts": {
           "type": "array",
@@ -4324,7 +4636,7 @@
           "items": {
             "type": "string"
           },
-          "description": "An array of SWAIG.functions that can be executed from this step."
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
         },
         "valid_contexts": {
           "type": "array",
