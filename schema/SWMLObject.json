@@ -1688,6 +1688,14 @@
     "AIPostPrompt": {
       "type": "object",
       "properties": {
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PomSection"
+          },
+          "minItems": 1,
+          "description": "Prompt Object Model (POM) is a structured data format for composing, organizing, and rendering prompt instructions for AI agents.\nPOM ensures that the prompt is structured in a way that is best for the AI agent to understand and execute.\nThe first item in the array MUST be FirstPOMSection (with optional title).\nAll subsequent items MUST be PomSection (with required title and body)."
+        },
         "text": {
           "type": "string",
           "description": "The instructions to send to the agent."
@@ -1755,6 +1763,14 @@
     "AIPrompt": {
       "type": "object",
       "properties": {
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PomSection"
+          },
+          "minItems": 1,
+          "description": "Prompt Object Model (POM) is a structured data format for composing, organizing, and rendering prompt instructions for AI agents.\nPOM ensures that the prompt is structured in a way that is best for the AI agent to understand and execute.\nThe first item in the array MUST be FirstPOMSection (with optional title).\nAll subsequent items MUST be PomSection (with required title and body)."
+        },
         "text": {
           "type": "string",
           "description": "The instructions to send to the agent."
@@ -2658,7 +2674,7 @@
         },
         "card_type": {
           "type": "string",
-          "description": "Space-seperated list of card types that are allowed to be used for this prompt.\n\nSupported card types:\n    - `visa`\n    - `mastercard`\n    - `amex`\n    - `maestro`\n    - `discover`\n    - `optima`\n    - `jcb`\n    - `diners-club`\n    - `enroute`"
+          "description": "Space-seperated list of card types that are allowed to be used for this prompt.\n\nSupported card types:\n    - `visa`\n    - `mastercard`\n    - `amex`\n    - `maestro`\n    - `discover`\n    - `optima`\n    - `jcb`\n    - `diners-club`"
         },
         "error_type": {
           "type": "string",
@@ -2758,6 +2774,17 @@
         "outbound"
       ],
       "title": "Direction enum"
+    },
+    "PomSection": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PomSectionBodyContent"
+        },
+        {
+          "$ref": "#/$defs/PomSectionBulletsContent"
+        }
+      ],
+      "description": "Regular section that requires either body or bullets and has required title"
     },
     "Contexts": {
       "type": "object",
@@ -3276,6 +3303,92 @@
           "$ref": "#/$defs/PayPromptPlayAction"
         }
       ]
+    },
+    "PomSectionBodyContent": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Title for the section"
+        },
+        "subsections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PomSection"
+          },
+          "minItems": 1,
+          "description": "Optional array of nested subsections"
+        },
+        "numbered": {
+          "type": "boolean",
+          "description": "Whether to number the section"
+        },
+        "numberedBullets": {
+          "type": "boolean",
+          "description": "Whether to number the bullets"
+        },
+        "body": {
+          "type": "string",
+          "description": "Body text for the section"
+        },
+        "bullets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Optional array of bullet points"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "description": "Content model with body text and optional bullets",
+      "additionalProperties": false
+    },
+    "PomSectionBulletsContent": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Title for the section"
+        },
+        "subsections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PomSection"
+          },
+          "minItems": 1,
+          "description": "Optional array of nested subsections"
+        },
+        "numbered": {
+          "type": "boolean",
+          "description": "Whether to number the section"
+        },
+        "numberedBullets": {
+          "type": "boolean",
+          "description": "Whether to number the bullets"
+        },
+        "body": {
+          "type": "string",
+          "description": "Body text for the section (optional)"
+        },
+        "bullets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Array of bullet points"
+        }
+      },
+      "required": [
+        "bullets"
+      ],
+      "description": "Content model with bullets and optional body",
+      "additionalProperties": false
     },
     "ContextSteps": {
       "type": "object",
@@ -4305,16 +4418,8 @@
       "type": "object",
       "properties": {
         "type": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "Say"
-            },
-            {
-              "type": "string",
-              "const": "Play"
-            }
-          ],
+          "type": "string",
+          "const": "Say",
           "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
         },
         "phrase": {
@@ -4332,16 +4437,8 @@
       "type": "object",
       "properties": {
         "type": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "Say"
-            },
-            {
-              "type": "string",
-              "const": "Play"
-            }
-          ],
+          "type": "string",
+          "const": "Play",
           "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
         },
         "phrase": {
