@@ -1942,6 +1942,17 @@
           "maximum": 50,
           "description": "Adjust the volume of the AI. Allowed values from `-50` - `50`."
         },
+        "asr_smart_format": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If true, enables smart formatting in ASR (Automatic Speech Recognition).\nThis improves the formatting of numbers, dates, times, and other entities in the transcript.\n**Default:** `false`"
+        },
         "attention_timeout": {
           "anyOf": [
             {
@@ -1955,7 +1966,7 @@
               "$ref": "#/$defs/SWMLVar"
             }
           ],
-          "description": "Amount of time, in ms, to wait before prompting the user to respond. Allowed values from `10,000` - `600,000`. Set to `0` to disable."
+          "description": "Amount of time, in ms, to wait before prompting the user to respond. Allowed values from `10,000` - `600,000`. Set to `0` to disable. **Default:** `5000` ms."
         },
         "attention_timeout_prompt": {
           "type": "string",
@@ -1994,6 +2005,17 @@
           ],
           "description": "If `true`, the AI will announce the function that is being executed on the call. The default is `false`."
         },
+        "audible_latency": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, the AI will announce latency information during the call. Useful for debugging. The default is `false`."
+        },
         "background_file": {
           "type": "string",
           "format": "uri",
@@ -2026,9 +2048,23 @@
           "maximum": 50,
           "description": "Defines background_file volume within a range of `-50` to `50`."
         },
+        "enable_barge": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Controls the barge behavior. Allowed values are `\"complete\"`, `\"partial\"`, `\"all\"`, or boolean.\n**Default:** `\"complete,partial\"`"
+        },
         "barge_match_string": {
           "type": "string",
-          "description": "Takes a string, including a regular expression, defining barge behavior.\n For example, this param can direct the AI to stop when the word 'hippopotomus' is input."
+          "description": "Takes a string, including a regular expression, defining barge behavior.\nFor example, this param can direct the AI to stop when the word 'hippopotomus' is input."
         },
         "barge_min_words": {
           "anyOf": [
@@ -2041,7 +2077,29 @@
           ],
           "minimum": 1,
           "maximum": 99,
-          "description": "\tDefines the number of words that must be input before triggering barge behavior, in a range of `1-99`."
+          "description": "Defines the number of words that must be input before triggering barge behavior, in a range of `1-99`."
+        },
+        "barge_functions": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, allows functions to be executed while the AI is being interrupted. The default is `true`."
+        },
+        "cache_mode": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, enables response caching for improved performance. The default is `false`."
         },
         "conscience": {
           "type": "string",
@@ -2050,6 +2108,17 @@
         "conversation_id": {
           "type": "string",
           "description": "Used by `check_for_input` and `save_conversation` to identify an individual conversation."
+        },
+        "conversation_sliding_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Sets the size of the sliding window for conversation history. This limits how much conversation history is sent to the AI model."
         },
         "debug_webhook_level": {
           "anyOf": [
@@ -2093,9 +2162,9 @@
               "$ref": "#/$defs/SWMLVar"
             }
           ],
-          "minimum": 250,
-          "maximum": 10000,
-          "description": "Time, in ms, at the end of digit input to detect end of input. Allowed values from `250` - `10,000`."
+          "minimum": 0,
+          "maximum": 30000,
+          "description": "Time, in ms, at the end of digit input to detect end of input. Allowed values from `0` - `30,000`. **Default:** `3000` ms."
         },
         "end_of_speech_timeout": {
           "anyOf": [
@@ -2108,7 +2177,7 @@
           ],
           "minimum": 250,
           "maximum": 10000,
-          "description": "Amount of silence, in ms, at the end of an utterance to detect end of speech. Allowed values from `250` - `10,000`."
+          "description": "Amount of silence, in ms, at the end of an utterance to detect end of speech. Allowed values from `250` - `10,000`. **Default:** `700` ms (Note: Documentation incorrectly lists 2000ms)."
         },
         "eleven_labs_stability": {
           "anyOf": [
@@ -2135,6 +2204,17 @@
           "minimum": 0.01,
           "maximum": 1,
           "description": "The similarity slider dictates how closely the AI should adhere to the original voice when attempting to replicate it. The higher the similarity, the closer the AI will sound to the original voice."
+        },
+        "enable_accounting": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, enables usage accounting. The default is `false`."
         },
         "enable_thinking": {
           "anyOf": [
@@ -2169,7 +2249,20 @@
           ],
           "minimum": 0,
           "maximum": 100,
-          "description": "Amount of energy necessary for bot to hear you (in dB). Allowed values from `0.0` - `100.0`."
+          "description": "Amount of energy necessary for bot to hear you (in dB). Allowed values from `0.0` - `100.0`. **Default:** `52.0` dB."
+        },
+        "first_word_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Amount of time, in ms, to wait for the first word after speech is detected. Allowed values from `0` - `10,000`. Default is `1000` ms."
         },
         "function_wait_for_talking": {
           "anyOf": [
@@ -2181,6 +2274,17 @@
             }
           ],
           "description": "If `true`, the AI will wait for any `filler` to finish playing before executing a function. \nIf `false`, the AI will execute a function asynchronously as the `filler` plays. \nDefault is `false`."
+        },
+        "functions_on_no_response": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, functions can be executed when there is no user response after a timeout. The default is `false`."
         },
         "hard_stop_prompt": {
           "type": "string",
@@ -2225,7 +2329,7 @@
           ],
           "minimum": 10000,
           "maximum": 3600000,
-          "description": "Amount of time, in ms, to wait before exiting the app due to inactivity. Allowed values from `10,000` - `3,600,000`."
+          "description": "Amount of time, in ms, to wait before exiting the app due to inactivity. Allowed values from `10,000` - `3,600,000`. **Default:** `600000` ms (10 minutes)."
         },
         "initial_sleep_ms": {
           "anyOf": [
@@ -2285,6 +2389,19 @@
           ],
           "description": "If true, the AI Agent will be involved with the diarization process.\nUsers can state who they are at the start of the conversation and\nthe AI Agent will be able to correctly identify them when they are speaking later in the conversation.\n**Default:** `false`"
         },
+        "max_emotion": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 1,
+          "maximum": 30,
+          "description": "Sets the maximum emotion intensity for the AI voice. Allowed values from `1` - `30`. Default is `30`."
+        },
         "openai_asr_engine": {
           "anyOf": [
             {
@@ -2309,7 +2426,7 @@
           ],
           "minimum": 10000,
           "maximum": 600000,
-          "description": "Sets a time duration for the outbound call recipient to respond to the AI agent before timeout, in a range from `10000` to `600000`."
+          "description": "Sets a time duration for the outbound call recipient to respond to the AI agent before timeout, in a range from `10000` to `600000`. **Default:** `120000` ms (2 minutes)."
         },
         "save_conversation": {
           "anyOf": [
@@ -2321,6 +2438,45 @@
             }
           ],
           "description": "Send a summary of the conversation after the call ends.\nThis requires a `post_url` to be set in the ai parameters and the `conversation_id` defined below.\nThis eliminates the need for a `post_prompt` in the ai parameters."
+        },
+        "speech_event_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Amount of time, in ms, to wait for a speech event. Allowed values from `0` - `10,000`. Default is `1400` ms."
+        },
+        "speech_gen_quick_stops": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Number of quick stops to generate for speech. Allowed values from `0` - `10`. Default is `3`."
+        },
+        "speech_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 600000,
+          "description": "Overall speech timeout, in ms. Allowed values from `0` - `600,000`. Default is `60000` ms."
         },
         "static_greeting": {
           "type": "string",
@@ -2336,6 +2492,22 @@
             }
           ],
           "description": "If `true`, the static greeting will not be interrupted by the user if they speak over the greeting. If `false`, the static greeting can be interrupted by the user if they speak over the greeting."
+        },
+        "summary_mode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "string"
+            },
+            {
+              "type": "string",
+              "const": "original"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Defines the mode for summary generation. Allowed values are `\"string\"` and `\"original\"`."
         },
         "swaig_allow_settings": {
           "anyOf": [
@@ -2370,6 +2542,17 @@
           ],
           "description": "Post entire conversation to any SWAIG call."
         },
+        "swaig_set_global_data": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Allows SWAIG to set global data that persists across calls."
+        },
         "thinking_model": {
           "anyOf": [
             {
@@ -2400,6 +2583,19 @@
             }
           ],
           "description": "When enabled, the AI will not respond to the user's input when the user is speaking over the agent. \nThe agent will wait for the user to finish speaking before responding. \nAdditionally, any attempt the LLM makes to barge will be ignored and scraped from the conversation logs."
+        },
+        "transparent_barge_max_time": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 60000,
+          "description": "Maximum time, in ms, for transparent barge mode. Allowed values from `0` - `60,000`. Default is `3000` ms."
         },
         "transfer_summary": {
           "anyOf": [
@@ -2489,13 +2685,12 @@
     "AIPostPrompt": {
       "anyOf": [
         {
-          "$ref": "#/$defs/AIPromptText"
+          "$ref": "#/$defs/AIPostPromptText"
         },
         {
-          "$ref": "#/$defs/AIPromptPom"
+          "$ref": "#/$defs/AIPostPromptPom"
         }
-      ],
-      "title": "post_prompt"
+      ]
     },
     "Pronounce": {
       "type": "object",
@@ -2529,9 +2724,6 @@
     },
     "AIPrompt": {
       "oneOf": [
-        {
-          "$ref": "#/$defs/AIPromptContexts"
-        },
         {
           "$ref": "#/$defs/AIPromptText"
         },
@@ -3745,6 +3937,167 @@
       ],
       "title": "Direction enum"
     },
+    "AIPostPromptText": {
+      "type": "object",
+      "properties": {
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "text": {
+          "type": "string",
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "AIPromptBase",
+      "unevaluatedProperties": false
+    },
+    "AIPostPromptPom": {
+      "type": "object",
+      "properties": {
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "pom"
+      ],
+      "title": "AIPromptBase",
+      "unevaluatedProperties": false
+    },
     "AIPromptText": {
       "type": "object",
       "properties": {
@@ -3816,6 +4169,10 @@
         "text": {
           "type": "string",
           "description": "The instructions to send to the agent."
+        },
+        "contexts": {
+          "$ref": "#/$defs/Contexts",
+          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
         }
       },
       "required": [
@@ -3899,95 +4256,16 @@
           },
           "minItems": 1,
           "description": "Prompt Object Model (POM) is a structured data format for composing, organizing, and rendering prompt instructions for AI agents.\nPOM ensures that the prompt is structured in a way that is best for the AI agent to understand and execute.\nThe first item in the array MUST be FirstPOMSection (with optional title).\nAll subsequent items MUST be PomSection (with required title and body)."
+        },
+        "contexts": {
+          "$ref": "#/$defs/Contexts",
+          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
         }
       },
       "required": [
         "pom"
       ],
       "title": "AIPromptBase",
-      "unevaluatedProperties": false
-    },
-    "AIPromptContexts": {
-      "type": "object",
-      "properties": {
-        "temperature": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1.5,
-          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
-        },
-        "confidence": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
-        },
-        "presence_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
-        },
-        "frequency_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
-        },
-        "contexts": {
-          "$ref": "#/$defs/Contexts",
-          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
-        },
-        "text": {
-          "type": "string",
-          "description": "The instructions to send to the agent."
-        }
-      },
-      "required": [
-        "contexts"
-      ],
-      "title": "prompt contexts",
       "unevaluatedProperties": false
     },
     "SWAIGDefaults": {
@@ -4056,9 +4334,41 @@
     "SWAIGInternalFiller": {
       "type": "object",
       "properties": {
+        "hangup": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to hangup the call.\nFillers will be played when the `hangup` function is called."
+        },
+        "check_time": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to check the current time.\nFillers will be played when the `check_time` function is called."
+        },
+        "wait_for_user": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to wait for user input.\nFillers will be played when the `wait_for_user` function is called."
+        },
+        "wait_seconds": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to wait for a specified number of seconds.\nFillers will be played when the `wait_seconds` function is called."
+        },
+        "adjust_response_latency": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to adjust the response latency of the AI Agent.\nFillers will be played when the `adjust_response_latency` function is called."
+        },
+        "next_step": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to proceed to the next step in the conversation flow.\nFillers will be played when the `next_step` function is called."
+        },
+        "change_context": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to change the context of the conversation.\nFillers will be played when the `change_context` function is called."
+        },
         "get_visual_input": {
           "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to visually process input that the AI Agent has captured."
+          "description": "This function is used to visually process input that the AI Agent has captured.\nFillers will be played when the `get_visual_input` function is called."
+        },
+        "get_ideal_strategy": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to get the ideal strategy for the current conversation state.\nFillers will be played when the ai utilizes the `thinking` capability and uses the `get_ideal_strategy` function."
         }
       },
       "unevaluatedProperties": false
@@ -4527,15 +4837,12 @@
       "type": "object",
       "properties": {
         "default": {
-          "$ref": "#/$defs/ContextSteps",
+          "$ref": "#/$defs/ContextsObject",
           "description": "The default context to use at the beginning of the conversation. Additional context steps can be defined as any other key in the object."
         }
       },
-      "required": [
-        "default"
-      ],
       "unevaluatedProperties": {
-        "$ref": "#/$defs/ContextSteps"
+        "$ref": "#/$defs/ContextsObject"
       },
       "title": "contexts"
     },
@@ -4589,6 +4896,17 @@
           "$ref": "#/$defs/DataMap",
           "minProperties": 1,
           "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "skip_fillers": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, it forces generic fillers to be skipped. Only function specific fillers will be played."
         },
         "web_hook_url": {
           "type": "string",
@@ -4683,6 +5001,17 @@
           "$ref": "#/$defs/DataMap",
           "minProperties": 1,
           "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "skip_fillers": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, it forces generic fillers to be skipped. Only function specific fillers will be played."
         },
         "web_hook_url": {
           "type": "string",
@@ -4779,6 +5108,17 @@
           "minProperties": 1,
           "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
         },
+        "skip_fillers": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, it forces generic fillers to be skipped. Only function specific fillers will be played."
+        },
         "web_hook_url": {
           "type": "string",
           "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Authentication can also be set in the url in the format of `username:password@url.`"
@@ -4873,6 +5213,17 @@
           "$ref": "#/$defs/DataMap",
           "minProperties": 1,
           "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "skip_fillers": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, it forces generic fillers to be skipped. Only function specific fillers will be played."
         },
         "web_hook_url": {
           "type": "string",
@@ -6024,23 +6375,15 @@
       "description": "Content model with bullets and optional body",
       "unevaluatedProperties": false
     },
-    "ContextSteps": {
-      "type": "object",
-      "properties": {
-        "steps": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ContextStepsParams"
-          },
-          "description": "An array of objects that define the steps in the context. These steps are used to define the flow of the conversation.",
-          "title": "steps"
+    "ContextsObject": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ContextsPOMObject"
+        },
+        {
+          "$ref": "#/$defs/ContextsTextObject"
         }
-      },
-      "required": [
-        "steps"
-      ],
-      "title": "ContextSteps object",
-      "unevaluatedProperties": false
+      ]
     },
     "FunctionParameters": {
       "type": "object",
@@ -6097,16 +6440,59 @@
       "title": "DataMap object",
       "unevaluatedProperties": false
     },
-    "ContextStepsParams": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/ContextStepsEnd"
+    "ContextsPOMObject": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContextSteps"
+          },
+          "description": "An array of objects that define the steps in the context. These steps are used to define the flow of the conversation.",
+          "title": "steps"
         },
-        {
-          "$ref": "#/$defs/ContextStepsValidSteps"
+        "isolated": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, the conversation history will be reset and the agent will only have the context of the original system prompt."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "An array of objects that define the POM for the context. POM is the Post-Prompt Object Model, which is used to define the flow of the conversation."
         }
+      },
+      "required": [
+        "steps"
       ],
-      "title": "ContextStepsParams union"
+      "title": "ContextsPOMObject",
+      "unevaluatedProperties": false
+    },
+    "ContextsTextObject": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContextSteps"
+          },
+          "description": "An array of objects that define the steps in the context. These steps are used to define the flow of the conversation.",
+          "title": "steps"
+        },
+        "isolated": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, the conversation history will be reset and the agent will only have the context of the original system prompt."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text to send to the agent."
+        }
+      },
+      "required": [
+        "steps"
+      ],
+      "unevaluatedProperties": false
     },
     "SchemaType": {
       "oneOf": [
@@ -6323,114 +6709,16 @@
       "title": "Webhook object",
       "unevaluatedProperties": false
     },
-    "ContextStepsEnd": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "^(?!next$).*$",
-          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+    "ContextSteps": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StepTypePOM"
         },
-        "text": {
-          "type": "string",
-          "description": "The prompt or instructions given to the AI at this step."
-        },
-        "step_criteria": {
-          "type": "string",
-          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
-        },
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
-        },
-        "valid_contexts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid contexts that the conversation can transition to from this step."
-        },
-        "skip_user_turn": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
-        },
-        "end": {
-          "type": "boolean",
-          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
+        {
+          "$ref": "#/$defs/StepTypeText"
         }
-      },
-      "required": [
-        "name",
-        "text"
       ],
-      "title": "ContextStepsEnd object",
-      "unevaluatedProperties": false
-    },
-    "ContextStepsValidSteps": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "^(?!next$).*$",
-          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
-        },
-        "text": {
-          "type": "string",
-          "description": "The prompt or instructions given to the AI at this step."
-        },
-        "step_criteria": {
-          "type": "string",
-          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
-        },
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
-        },
-        "valid_contexts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid contexts that the conversation can transition to from this step."
-        },
-        "skip_user_turn": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
-        },
-        "valid_steps": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
-        }
-      },
-      "required": [
-        "name",
-        "text"
-      ],
-      "title": "ContextStepsValidSteps object",
-      "unevaluatedProperties": false
+      "title": "ContextStepsParams union"
     },
     "StringProperty": {
       "type": "object",
@@ -6849,6 +7137,26 @@
       ],
       "title": "Action union"
     },
+    "StepTypePOM": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/POMEndStep"
+        },
+        {
+          "$ref": "#/$defs/POMValidSteps"
+        }
+      ]
+    },
+    "StepTypeText": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TextEndStep"
+        },
+        {
+          "$ref": "#/$defs/TextValidSteps"
+        }
+      ]
+    },
     "StringFormat": {
       "type": "string",
       "enum": [
@@ -7160,6 +7468,230 @@
         "user_input"
       ],
       "title": "UserInputAction object",
+      "unevaluatedProperties": false
+    },
+    "POMEndStep": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^(?!next$).*$",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+        },
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "An array of objects that define the POM for the step. POM is the Post-Prompt Object Model, which is used to define the flow of the conversation."
+        },
+        "end": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
+        }
+      },
+      "required": [
+        "name",
+        "pom"
+      ],
+      "title": "ContextStepsEnd object",
+      "unevaluatedProperties": false
+    },
+    "POMValidSteps": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^(?!next$).*$",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+        },
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "An array of objects that define the POM for the step. POM is the Post-Prompt Object Model, which is used to define the flow of the conversation."
+        },
+        "valid_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
+        }
+      },
+      "required": [
+        "name",
+        "pom"
+      ],
+      "title": "ContextStepsValidSteps object",
+      "unevaluatedProperties": false
+    },
+    "TextEndStep": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^(?!next$).*$",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+        },
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "text": {
+          "type": "string",
+          "description": "The prompt or instructions given to the AI at this step."
+        },
+        "end": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
+        }
+      },
+      "required": [
+        "name",
+        "text"
+      ],
+      "title": "ContextStepsBase object",
+      "unevaluatedProperties": false
+    },
+    "TextValidSteps": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^(?!next$).*$",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
+        },
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "text": {
+          "type": "string",
+          "description": "The prompt or instructions given to the AI at this step."
+        },
+        "valid_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
+        }
+      },
+      "required": [
+        "name",
+        "text"
+      ],
+      "title": "ContextStepsBase object",
       "unevaluatedProperties": false
     }
   },
