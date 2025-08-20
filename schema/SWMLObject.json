@@ -46,6 +46,9 @@
           "$ref": "#/$defs/AI"
         },
         {
+          "$ref": "#/$defs/AmazonBedrock"
+        },
+        {
           "$ref": "#/$defs/Cond"
         },
         {
@@ -74,6 +77,9 @@
         },
         {
           "$ref": "#/$defs/JoinRoom"
+        },
+        {
+          "$ref": "#/$defs/JoinConference"
         },
         {
           "$ref": "#/$defs/Play"
@@ -193,76 +199,28 @@
       "type": "object",
       "properties": {
         "ai": {
-          "type": "object",
-          "properties": {
-            "global_data": {
-              "type": "object",
-              "properties": {},
-              "unevaluatedProperties": {},
-              "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script\nor from the SWML `set_global_data` action. This data can be referenced `globally`.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string."
-            },
-            "hints": {
-              "type": "array",
-              "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "$ref": "#/$defs/Hint"
-                  }
-                ]
-              },
-              "description": "Hints help the AI agent understand certain words or phrases better. Words that can commonly be misinterpreted can be added to the hints to help the AI speak more accurately."
-            },
-            "languages": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Languages"
-              },
-              "description": "An array of JSON objects defining supported languages in the conversation."
-            },
-            "params": {
-              "$ref": "#/$defs/AIParams",
-              "description": "A JSON object containing parameters as key-value pairs."
-            },
-            "post_prompt": {
-              "$ref": "#/$defs/AIPostPrompt",
-              "description": "The final set of instructions and configuration settings to send to the agent."
-            },
-            "post_prompt_url": {
-              "type": "string",
-              "format": "uri",
-              "description": "The URL to which to send status callbacks and reports. Authentication can also be set in the url in the format of `username:password@url`."
-            },
-            "pronounce": {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/Pronounce"
-              },
-              "description": "An array of JSON objects to clarify the AI's pronunciation of words or expressions."
-            },
-            "prompt": {
-              "$ref": "#/$defs/AIPrompt",
-              "description": "Establishes the initial set of instructions and settings to configure the agent."
-            },
-            "SWAIG": {
-              "$ref": "#/$defs/SWAIG",
-              "description": "An array of JSON objects to create user-defined functions/endpoints that can be executed during the dialogue."
-            }
-          },
-          "required": [
-            "prompt"
-          ],
-          "description": "Create a new AI agent.",
-          "title": "ai",
-          "unevaluatedProperties": false
+          "$ref": "#/$defs/AIObject",
+          "description": "Creates a new AI agent.",
+          "title": "ai"
         }
       },
       "required": [
         "ai"
       ],
-      "title": "AI object",
+      "title": "AI Type",
+      "unevaluatedProperties": false
+    },
+    "AmazonBedrock": {
+      "type": "object",
+      "properties": {
+        "amazon_bedrock": {
+          "$ref": "#/$defs/AmazonBedrockObject",
+          "description": "Creates a new Bedrock AI Agent"
+        }
+      },
+      "required": [
+        "amazon_bedrock"
+      ],
       "unevaluatedProperties": false
     },
     "Cond": {
@@ -554,6 +512,21 @@
         "join_room"
       ],
       "title": "JoinRoom object",
+      "unevaluatedProperties": false
+    },
+    "JoinConference": {
+      "type": "object",
+      "properties": {
+        "join_conference": {
+          "$ref": "#/$defs/JoinConferenceObject",
+          "description": "Join an ad-hoc audio conference with RELAY and CXML calls.",
+          "title": "join_conference"
+        }
+      },
+      "required": [
+        "join_conference"
+      ],
+      "title": "JoinConference object",
       "unevaluatedProperties": false
     },
     "Play": {
@@ -1853,6 +1826,1419 @@
       "type": "string",
       "pattern": "^[\\$%]\\{.*\\}$"
     },
+    "AIObject": {
+      "type": "object",
+      "properties": {
+        "global_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script\nor from the SWML `set_global_data` action. This data can be referenced `globally`.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string."
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/Hint"
+              }
+            ]
+          },
+          "description": "Hints help the AI agent understand certain words or phrases better. Words that can commonly be misinterpreted can be added to the hints to help the AI speak more accurately."
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Languages"
+          },
+          "description": "An array of JSON objects defining supported languages in the conversation."
+        },
+        "params": {
+          "$ref": "#/$defs/AIParams",
+          "description": "A JSON object containing parameters as key-value pairs."
+        },
+        "post_prompt": {
+          "$ref": "#/$defs/AIPostPrompt",
+          "description": "The final set of instructions and configuration settings to send to the agent."
+        },
+        "post_prompt_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL to which to send status callbacks and reports. Authentication can also be set in the url in the format of `username:password@url`."
+        },
+        "pronounce": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Pronounce"
+          },
+          "description": "An array of JSON objects to clarify the AI's pronunciation of words or expressions."
+        },
+        "prompt": {
+          "$ref": "#/$defs/AIPrompt",
+          "description": "Establishes the initial set of instructions and settings to configure the agent."
+        },
+        "SWAIG": {
+          "$ref": "#/$defs/SWAIG",
+          "description": "An array of JSON objects to create user-defined functions/endpoints that can be executed during the dialogue."
+        }
+      },
+      "required": [
+        "prompt"
+      ],
+      "title": "AI Object",
+      "unevaluatedProperties": false
+    },
+    "AmazonBedrockObject": {
+      "type": "object",
+      "properties": {
+        "global_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script\nor from the SWML `set_global_data` action. This data can be referenced `globally`.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string."
+        },
+        "params": {
+          "$ref": "#/$defs/BedrockParams",
+          "description": "A JSON object containing parameters as key-value pairs."
+        },
+        "post_prompt": {
+          "$ref": "#/$defs/BedrockPostPrompt",
+          "description": "The final set of instructions and configuration settings to send to the agent."
+        },
+        "post_prompt_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL to which to send status callbacks and reports. Authentication can also be set in the url in the format of `username:password@url`."
+        },
+        "prompt": {
+          "$ref": "#/$defs/BedrockPrompt",
+          "description": "Establishes the initial set of instructions and settings to configure the agent."
+        },
+        "SWAIG": {
+          "$ref": "#/$defs/BedrockSWAIG",
+          "description": "An array of JSON objects to create user-defined functions/endpoints that can be executed during the dialogue."
+        }
+      },
+      "required": [
+        "prompt"
+      ],
+      "unevaluatedProperties": false
+    },
+    "CondParams": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CondReg"
+        },
+        {
+          "$ref": "#/$defs/CondElse"
+        }
+      ],
+      "title": "CondParams union"
+    },
+    "ConnectDeviceSingle": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The caller ID to use when dialing the number."
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectHeaders"
+          },
+          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
+        },
+        "codecs": {
+          "type": "string",
+          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "webrtc_media": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
+        },
+        "session_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 1,
+          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "ringback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of URIs to play as ringback tone."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConnectSwitch"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CondParams"
+              },
+              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
+              "title": "cond"
+            }
+          ],
+          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
+        },
+        "max_duration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
+        },
+        "answer_on_bridge": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
+        },
+        "confirm": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ValidConfirmMethods"
+              }
+            }
+          ],
+          "description": "Confirmation object or string."
+        },
+        "confirm_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for authentication."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for authentication."
+        },
+        "encryption": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "mandatory"
+            },
+            {
+              "type": "string",
+              "const": "optional"
+            },
+            {
+              "type": "string",
+              "const": "forbidden"
+            }
+          ],
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "call_state_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver call status events"
+        },
+        "call_state_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CallStatus"
+          },
+          "default": [
+            "ended"
+          ],
+          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
+        },
+        "to": {
+          "type": "string",
+          "description": "The SIP URI or phone number to dial."
+        }
+      },
+      "required": [
+        "to"
+      ],
+      "title": "ConnectDeviceSingle object",
+      "unevaluatedProperties": false
+    },
+    "ConnectDeviceSerial": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The caller ID to use when dialing the number."
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectHeaders"
+          },
+          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
+        },
+        "codecs": {
+          "type": "string",
+          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "webrtc_media": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
+        },
+        "session_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 1,
+          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "ringback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of URIs to play as ringback tone."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConnectSwitch"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CondParams"
+              },
+              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
+              "title": "cond"
+            }
+          ],
+          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
+        },
+        "max_duration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
+        },
+        "answer_on_bridge": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
+        },
+        "confirm": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ValidConfirmMethods"
+              }
+            }
+          ],
+          "description": "Confirmation object or string."
+        },
+        "confirm_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for authentication."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for authentication."
+        },
+        "encryption": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "mandatory"
+            },
+            {
+              "type": "string",
+              "const": "optional"
+            },
+            {
+              "type": "string",
+              "const": "forbidden"
+            }
+          ],
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "call_state_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver call status events"
+        },
+        "call_state_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CallStatus"
+          },
+          "default": [
+            "ended"
+          ],
+          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
+        },
+        "serial": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectDeviceSingle"
+          }
+        }
+      },
+      "required": [
+        "serial"
+      ],
+      "title": "ConnectDeviceSerial object",
+      "unevaluatedProperties": false
+    },
+    "ConnectDeviceParallel": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The caller ID to use when dialing the number."
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectHeaders"
+          },
+          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
+        },
+        "codecs": {
+          "type": "string",
+          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "webrtc_media": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
+        },
+        "session_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 1,
+          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "ringback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of URIs to play as ringback tone."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConnectSwitch"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CondParams"
+              },
+              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
+              "title": "cond"
+            }
+          ],
+          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
+        },
+        "max_duration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
+        },
+        "answer_on_bridge": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
+        },
+        "confirm": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ValidConfirmMethods"
+              }
+            }
+          ],
+          "description": "Confirmation object or string."
+        },
+        "confirm_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for authentication."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for authentication."
+        },
+        "encryption": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "mandatory"
+            },
+            {
+              "type": "string",
+              "const": "optional"
+            },
+            {
+              "type": "string",
+              "const": "forbidden"
+            }
+          ],
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "call_state_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver call status events"
+        },
+        "call_state_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CallStatus"
+          },
+          "default": [
+            "ended"
+          ],
+          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
+        },
+        "parallel": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectDeviceSingle"
+          },
+          "description": "Array of destinations to dial simultaneously."
+        }
+      },
+      "required": [
+        "parallel"
+      ],
+      "title": "ConnectDeviceParallel object",
+      "unevaluatedProperties": false
+    },
+    "ConnectDeviceSerialParallel": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The caller ID to use when dialing the number."
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectHeaders"
+          },
+          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
+        },
+        "codecs": {
+          "type": "string",
+          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "webrtc_media": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
+        },
+        "session_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 1,
+          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
+        },
+        "ringback": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of URIs to play as ringback tone."
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConnectSwitch"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CondParams"
+              },
+              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
+              "title": "cond"
+            }
+          ],
+          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
+        },
+        "max_duration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
+        },
+        "answer_on_bridge": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
+        },
+        "confirm": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ValidConfirmMethods"
+              }
+            }
+          ],
+          "description": "Confirmation object or string."
+        },
+        "confirm_timeout": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for authentication."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for authentication."
+        },
+        "encryption": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "mandatory"
+            },
+            {
+              "type": "string",
+              "const": "optional"
+            },
+            {
+              "type": "string",
+              "const": "forbidden"
+            }
+          ],
+          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
+        },
+        "call_state_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver call status events"
+        },
+        "call_state_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CallStatus"
+          },
+          "default": [
+            "ended"
+          ],
+          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
+        },
+        "serial_parallel": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ConnectDeviceSingle"
+            }
+          },
+          "description": "Array of arrays.\nInner arrays contain destinations to dial simultaneously.\nOuter array attempts each parallel group in order."
+        }
+      },
+      "required": [
+        "serial_parallel"
+      ],
+      "title": "ConnectDeviceSerialParallel object",
+      "unevaluatedProperties": false
+    },
+    "ExecuteSwitch": {
+      "type": "object",
+      "properties": {
+        "variable": {
+          "type": "string",
+          "description": "Name of the variable whose value needs to be compared. If not provided, it will check the `return_value` variable.\nCan be one of the listed set of variables, or a string to represent a custom variable."
+        },
+        "case": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/SWMLMethod"
+            }
+          },
+          "description": "Object of values mapped to array of instructions to execute"
+        },
+        "default": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWMLMethod"
+          },
+          "description": "Array of instructions to execute if no cases match"
+        }
+      },
+      "required": [
+        "case"
+      ],
+      "title": "ExecuteSwitch object",
+      "unevaluatedProperties": false
+    },
+    "TranscribeAction": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TranscribeStartAction"
+        },
+        {
+          "type": "string",
+          "const": "stop",
+          "description": "Stops live transcription of the call."
+        },
+        {
+          "$ref": "#/$defs/TranscribeSummarizeActionUnion"
+        }
+      ],
+      "title": "TranscribeAction union"
+    },
+    "TranslateAction": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/StartAction"
+        },
+        {
+          "type": "string",
+          "const": "stop",
+          "description": "Stops live translation of the call."
+        },
+        {
+          "$ref": "#/$defs/SummarizeActionUnion"
+        },
+        {
+          "$ref": "#/$defs/InjectAction"
+        }
+      ],
+      "title": "TranslateAction union"
+    },
+    "JoinConferenceObject": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of conference"
+        },
+        "muted": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Whether to join the conference in a muted state. If set to `true`, the participant will be muted upon joining. Default `false`"
+        },
+        "beep": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "true"
+            },
+            {
+              "type": "string",
+              "const": "false"
+            },
+            {
+              "type": "string",
+              "const": "onEnter"
+            },
+            {
+              "type": "string",
+              "const": "onExit"
+            }
+          ],
+          "description": "Sets the behavior of the beep sound when joining or leaving the conference. Default `true`"
+        },
+        "start_on_enter": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Starts the conference when the main participant joins. This means the start action will not wait on more participants to join before starting. Default `true`"
+        },
+        "end_on_exit": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Ends the conference when the main participant leaves. This means the end action will not wait on more participants to leave before ending. Default `false`"
+        },
+        "wait_url": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A URL that will play media when the conference is put on hold. Default hold music will be played if not set"
+        },
+        "max_participants": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 1,
+          "maximum": 250,
+          "description": "The maximum number of participants allowed in the conference. If the limit is reached, new participants will not be able to join. Default `250`"
+        },
+        "record": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "do-not-record"
+            },
+            {
+              "type": "string",
+              "const": "record-from-start"
+            }
+          ],
+          "description": "Enables or disables recording of the conference. Default `do-not-record`"
+        },
+        "region": {
+          "type": "string",
+          "description": "Specifies the geographical region where the conference will be hosted. Default not set"
+        },
+        "trim": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "trim-silence"
+            },
+            {
+              "type": "string",
+              "const": "do-not-trim"
+            }
+          ],
+          "description": "If set to `trim-silence`, it will remove silence from the start of the recording. If set to `do-not-trim`, it will keep the silence. Default `trim-silence`"
+        },
+        "coach": {
+          "type": "string",
+          "description": "Coach accepts a call SID of a call that is currently connected to an in-progress conference.\nSpecifying a call SID that does not exist or is no longer connected will result in a failure."
+        },
+        "status_callback_event": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "start"
+            },
+            {
+              "type": "string",
+              "const": "end"
+            },
+            {
+              "type": "string",
+              "const": "join"
+            },
+            {
+              "type": "string",
+              "const": "leave"
+            },
+            {
+              "type": "string",
+              "const": "mute"
+            },
+            {
+              "type": "string",
+              "const": "hold"
+            },
+            {
+              "type": "string",
+              "const": "modify"
+            },
+            {
+              "type": "string",
+              "const": "speaker"
+            },
+            {
+              "type": "string",
+              "const": "announcement"
+            }
+          ],
+          "description": "The events to listen for and send to the status callback URL. Default not set"
+        },
+        "status_callback": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL to which status events will be sent. This URL must be publicly accessible and able to handle HTTP requests. Default not set"
+        },
+        "status_callback_method": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "GET"
+            },
+            {
+              "type": "string",
+              "const": "POST"
+            }
+          ],
+          "description": "The HTTP method to use when sending status events to the status callback URL. Default `POST`"
+        },
+        "recording_status_callback": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL to which recording status events will be sent. This URL must be publicly accessible and able to handle HTTP requests. Default not set"
+        },
+        "recording_status_callback_method": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "GET"
+            },
+            {
+              "type": "string",
+              "const": "POST"
+            }
+          ],
+          "description": "The HTTP method to use when sending recording status events to the recording status callback URL. Default `POST`"
+        },
+        "recording_status_callback_event": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "in-progress"
+            },
+            {
+              "type": "string",
+              "const": "completed"
+            },
+            {
+              "type": "string",
+              "const": "absent"
+            }
+          ],
+          "description": "The events to listen for and send to the recording status callback URL. Default not set"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "variable": {
+                  "type": "string",
+                  "description": "Name of the variable whose value needs to be compared"
+                },
+                "case": {
+                  "type": "object",
+                  "properties": {},
+                  "unevaluatedProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/SWMLMethod"
+                    }
+                  },
+                  "description": "Object of values mapped to array of instructions to execute"
+                },
+                "default": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/SWMLMethod"
+                  },
+                  "description": "Array of instructions to execute if no cases match"
+                }
+              },
+              "required": [
+                "variable",
+                "case"
+              ],
+              "description": "Execute a sequence of instructions depending on which value matches a variable.",
+              "title": "switch",
+              "unevaluatedProperties": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CondParams"
+              },
+              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
+              "title": "cond"
+            }
+          ],
+          "description": "Allows the user to specify a custom action to be executed when the conference result is returned (typically when it has ended). \nThe actions can a `switch` object or a `cond` array.\nThe `switch` object allows for conditional execution based on the result of the conference, while\nthe `cond` array allows for multiple conditions to be checked in sequence.\nIf neither is provided, the default action will be to end the conference."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "JoinConferenceObject object",
+      "unevaluatedProperties": false
+    },
+    "PlayWithURL": {
+      "type": "object",
+      "properties": {
+        "auto_answer": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, the call will automatically answer as the sound is playing. If `false`, you will start playing the audio during early media"
+        },
+        "volume": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -40,
+          "maximum": 40,
+          "description": "Volume level for the audio file.\nDefault is `0`.\nValid range is -40 to 40"
+        },
+        "say_voice": {
+          "type": "string",
+          "description": "The voice to use for the text to speech.\nDefault is `Polly.Salli`"
+        },
+        "say_language": {
+          "type": "string",
+          "description": "The language to use for the text to speech.\nDefault is `en-US`"
+        },
+        "say_gender": {
+          "type": "string",
+          "description": "Gender to use for the text to speech.\nDefault is `female`."
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver play status events"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/play_url"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "URL to play.\nRequired if `urls` is not present.\nAllowed URLs are:\n    - http:// or https:// - audio file to GET\n    - ring:[duration:]<country code> - ring tone to play. For example: ring:us to play single ring or ring:20.0:us to play ring for 20 seconds.\n    - say:<text to speak> - Sentence to say\n    - silence: <duration> - seconds of silence to play"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "description": "Play with a single URL",
+      "title": "PlayWithURL object",
+      "unevaluatedProperties": false
+    },
+    "PlayWithURLS": {
+      "type": "object",
+      "properties": {
+        "auto_answer": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "If `true`, the call will automatically answer as the sound is playing. If `false`, you will start playing the audio during early media"
+        },
+        "volume": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -40,
+          "maximum": 40,
+          "description": "Volume level for the audio file.\nDefault is `0`.\nValid range is -40 to 40"
+        },
+        "say_voice": {
+          "type": "string",
+          "description": "The voice to use for the text to speech.\nDefault is `Polly.Salli`"
+        },
+        "say_language": {
+          "type": "string",
+          "description": "The language to use for the text to speech.\nDefault is `en-US`"
+        },
+        "say_gender": {
+          "type": "string",
+          "description": "Gender to use for the text to speech.\nDefault is `female`."
+        },
+        "status_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "http or https URL to deliver play status events"
+        },
+        "urls": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/play_url"
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SWMLVar"
+              }
+            }
+          ],
+          "description": "Array of URLs to play.\nRequired if `url` is not present.\nAllowed URLs are:\n    - http:// or https:// - audio file to GET\n    - ring:[duration:]<country code> - ring tone to play. For example: ring:us to play single ring or ring:20.0:us to play ring for 20 seconds.\n    - say:<text to speak> - Sentence to say\n    - silence: <duration> - seconds of silence to play"
+        }
+      },
+      "required": [
+        "urls"
+      ],
+      "title": "PlayWithURLS object",
+      "unevaluatedProperties": false
+    },
+    "play_url": {
+      "type": "string",
+      "pattern": "^(http://.*|https://.*|ring: ?[0-9.]*: ?[a-zA-Z]{2}|say: ?.*|silence: ?[0-9.]*|ring: ?[a-zA-Z]{2})$"
+    },
+    "SMSWithBody": {
+      "type": "object",
+      "properties": {
+        "to_number": {
+          "type": "string",
+          "description": "The phone number to send the SMS to."
+        },
+        "from_number": {
+          "type": "string",
+          "description": "The phone number to send the SMS from.\nDefault is the calling party's caller ID number."
+        },
+        "region": {
+          "type": "string",
+          "description": "The region to use for the SMS."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of tags to associate with the message to facilitate log searches."
+        },
+        "body": {
+          "type": "string",
+          "description": "Required if `media` is not present. The body of the SMS message."
+        }
+      },
+      "required": [
+        "to_number",
+        "from_number",
+        "body"
+      ],
+      "title": "SMSWithBody object",
+      "unevaluatedProperties": false
+    },
+    "SMSWithMedia": {
+      "type": "object",
+      "properties": {
+        "to_number": {
+          "type": "string",
+          "description": "The phone number to send the SMS to."
+        },
+        "from_number": {
+          "type": "string",
+          "description": "The phone number to send the SMS from.\nDefault is the calling party's caller ID number."
+        },
+        "region": {
+          "type": "string",
+          "description": "The region to use for the SMS."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of tags to associate with the message to facilitate log searches."
+        },
+        "media": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Required if `body` is not present. Array of media URLs to include in the message."
+        },
+        "body": {
+          "type": "string",
+          "description": "Optional if `media` is present. The body of the SMS message."
+        }
+      },
+      "required": [
+        "to_number",
+        "from_number",
+        "media"
+      ],
+      "title": "SMSWithMedia object",
+      "unevaluatedProperties": false
+    },
+    "PayParameters": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The identifier for your custom parameter. This will be the key in the parameters object."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value associated with the parameter. This will be the value in the parameters object."
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "unevaluatedProperties": false
+    },
+    "PayPrompts": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PayPromptAction"
+          },
+          "description": "Array of action objects to execute for this prompt. These actions can either play an audio file or speak a phrase."
+        },
+        "for": {
+          "type": "string",
+          "description": "The payment step this prompt is for. See Payment Steps for a list of available steps.\n\n- `payment-card-number`: Collect the payment card number.\n- `expiration-date`: Collect the payment card expiration date.\n- `security-code`: Collect the payment card security code.\n- `postal-code`: Collect the payment card postal code.\n- `payment-processing`: The step used during the payment processing.\n- `payment-completed`: The step used when the payment is completed.\n- `payment-failed`: The step used when the payment fails.\n- `payment-cancelled`: The step used when the payment is cancelled."
+        },
+        "attempts": {
+          "type": "string",
+          "description": "Specifies which payment attempt(s) this prompt applies to. The value increments when a payment fails.\n Use a single number (e.g., \"1\") or space-separated numbers (e.g., \"2 3\") to target the specific attempts."
+        },
+        "card_type": {
+          "type": "string",
+          "description": "Space-seperated list of card types that are allowed to be used for this prompt.\n\nSupported card types:\n    - `visa`\n    - `mastercard`\n    - `amex`\n    - `maestro`\n    - `discover`\n    - `optima`\n    - `jcb`\n    - `diners-club`"
+        },
+        "error_type": {
+          "type": "string",
+          "description": "Space-separated list of error types this prompt applies to\n\nAvailable error types:\n    - `timeout` - User input timeout\n    - `invalid-card-number` - Failed card validation\n    - `invalid-card-type` - Unsupported card type\n    - `invalid-date` - Invalid expiration date\n    - `invalid-security-code` - Invalid CVV format\n    - `invalid-postal-code` - Invalid postal code format\n    - `session-in-progress` - Concurrent session attempt\n    - `card-declined` - Payment declined\n"
+        }
+      },
+      "required": [
+        "actions",
+        "for"
+      ],
+      "unevaluatedProperties": false
+    },
     "Hint": {
       "type": "object",
       "properties": {
@@ -2679,8 +4065,8 @@
           "description": "When false, AI agent will initialize dialogue after call is setup. When true, agent will wait for the user to speak first."
         }
       },
-      "title": "params object",
-      "unevaluatedProperties": false
+      "unevaluatedProperties": {},
+      "title": "params object"
     },
     "AIPostPrompt": {
       "anyOf": [
@@ -2758,7 +4144,7 @@
           "items": {
             "$ref": "#/$defs/SWAIGFunction"
           },
-          "description": "An array of JSON objects to define functions that can be executed during the interaction with the AI. Default is not set.\nThe fields of this object are the six following."
+          "description": "An array of JSON objects to define functions that can be executed during the interaction with the AI. Default is not set."
         },
         "internal_fillers": {
           "$ref": "#/$defs/SWAIGInternalFiller",
@@ -2768,140 +4154,41 @@
       "title": "swaig",
       "unevaluatedProperties": false
     },
-    "CondParams": {
-      "oneOf": [
-        {
-          "$ref": "#/$defs/CondReg"
-        },
-        {
-          "$ref": "#/$defs/CondElse"
-        }
-      ],
-      "title": "CondParams union"
-    },
-    "ConnectDeviceSingle": {
+    "BedrockParams": {
       "type": "object",
       "properties": {
-        "from": {
+        "attention_timeout": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AttentionTimeout"
+            },
+            {
+              "type": "number",
+              "const": 0
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Amount of time, in ms, to wait before prompting the user to respond. Allowed values from `10,000` - `600,000`. Set to `0` to disable. **Default:** `5000` ms."
+        },
+        "hard_stop_prompt": {
           "type": "string",
-          "description": "The caller ID to use when dialing the number."
+          "description": "A final prompt that is fed into the AI when the `hard_stop_time` is reached."
         },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ConnectHeaders"
-          },
-          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
-        },
-        "codecs": {
-          "type": "string",
-          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "webrtc_media": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
-        },
-        "session_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 1,
-          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "ringback": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Array of URIs to play as ringback tone."
-        },
-        "result": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ConnectSwitch"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/CondParams"
-              },
-              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
-              "title": "cond"
-            }
-          ],
-          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
-        },
-        "timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
-        },
-        "max_duration": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
-        },
-        "answer_on_bridge": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
-        },
-        "call_state_url": {
-          "type": "string",
-          "description": "Webhook URL to send call state change notifications to for all legs. It can be overwritten on each destination."
-        },
-        "call_state_events": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
-        },
-        "confirm": {
+        "hard_stop_time": {
           "anyOf": [
             {
               "type": "string"
             },
             {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/ValidConfirmMethods"
-              }
+              "$ref": "#/$defs/SWMLVar"
             }
           ],
-          "description": "Confirmation object or string."
+          "pattern": "^(?:\\d+h)?(?:\\d+m)?(?:\\d+s)?$",
+          "description": "Specifies the maximum duration fopr the AI Agent to remain active before it exists the session. \nAfter the timeout, the AI will stop responding, and will proceed with the next SWML instruction.\n\n**Time Format:**\n  - Seconds Format: `30s`\n  - Minutes Format: `2m`\n  - Hours Format: `1h`\n  - Combined Format: `1h45m30s`"
         },
-        "confirm_timeout": {
+        "inactivity_timeout": {
           "anyOf": [
             {
               "type": "integer"
@@ -2910,1465 +4197,80 @@
               "$ref": "#/$defs/SWMLVar"
             }
           ],
-          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
+          "minimum": 10000,
+          "maximum": 3600000,
+          "description": "Amount of time, in ms, to wait before exiting the app due to inactivity. Allowed values from `10,000` - `3,600,000`. **Default:** `600000` ms (10 minutes)."
         },
-        "username": {
-          "type": "string",
-          "description": "Username for authentication."
-        },
-        "password": {
-          "type": "string",
-          "description": "Password for authentication."
-        },
-        "encryption": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "mandatory"
-            },
-            {
-              "type": "string",
-              "const": "optional"
-            },
-            {
-              "type": "string",
-              "const": "forbidden"
-            }
-          ],
-          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
-        },
-        "status_url": {
+        "video_listening_file": {
           "type": "string",
           "format": "uri",
-          "description": "http or https URL to deliver connect status events"
+          "description": "URL of a video file to play when AI is listening to the user speak. Only works for calls that support video."
         },
-        "to": {
-          "type": "string",
-          "description": "The SIP URI or phone number to dial."
-        }
-      },
-      "required": [
-        "to"
-      ],
-      "title": "ConnectDeviceSingle object",
-      "unevaluatedProperties": false
-    },
-    "ConnectDeviceSerial": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "type": "string",
-          "description": "The caller ID to use when dialing the number."
-        },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ConnectHeaders"
-          },
-          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
-        },
-        "codecs": {
-          "type": "string",
-          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "webrtc_media": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
-        },
-        "session_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 1,
-          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "ringback": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Array of URIs to play as ringback tone."
-        },
-        "result": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ConnectSwitch"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/CondParams"
-              },
-              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
-              "title": "cond"
-            }
-          ],
-          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
-        },
-        "timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
-        },
-        "max_duration": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
-        },
-        "answer_on_bridge": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
-        },
-        "call_state_url": {
-          "type": "string",
-          "description": "Webhook URL to send call state change notifications to for all legs. It can be overwritten on each destination."
-        },
-        "call_state_events": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
-        },
-        "confirm": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/ValidConfirmMethods"
-              }
-            }
-          ],
-          "description": "Confirmation object or string."
-        },
-        "confirm_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
-        },
-        "username": {
-          "type": "string",
-          "description": "Username for authentication."
-        },
-        "password": {
-          "type": "string",
-          "description": "Password for authentication."
-        },
-        "encryption": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "mandatory"
-            },
-            {
-              "type": "string",
-              "const": "optional"
-            },
-            {
-              "type": "string",
-              "const": "forbidden"
-            }
-          ],
-          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
-        },
-        "status_url": {
+        "video_idle_file": {
           "type": "string",
           "format": "uri",
-          "description": "http or https URL to deliver connect status events"
+          "description": "URL of a video file to play when AI is idle. Only works for calls that support video."
         },
-        "serial": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ConnectDeviceSingle"
-          }
-        }
-      },
-      "required": [
-        "serial"
-      ],
-      "title": "ConnectDeviceSerial object",
-      "unevaluatedProperties": false
-    },
-    "ConnectDeviceParallel": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "type": "string",
-          "description": "The caller ID to use when dialing the number."
-        },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ConnectHeaders"
-          },
-          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
-        },
-        "codecs": {
-          "type": "string",
-          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "webrtc_media": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
-        },
-        "session_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 1,
-          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "ringback": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Array of URIs to play as ringback tone."
-        },
-        "result": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ConnectSwitch"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/CondParams"
-              },
-              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
-              "title": "cond"
-            }
-          ],
-          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
-        },
-        "timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
-        },
-        "max_duration": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
-        },
-        "answer_on_bridge": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
-        },
-        "call_state_url": {
-          "type": "string",
-          "description": "Webhook URL to send call state change notifications to for all legs. It can be overwritten on each destination."
-        },
-        "call_state_events": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
-        },
-        "confirm": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/ValidConfirmMethods"
-              }
-            }
-          ],
-          "description": "Confirmation object or string."
-        },
-        "confirm_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
-        },
-        "username": {
-          "type": "string",
-          "description": "Username for authentication."
-        },
-        "password": {
-          "type": "string",
-          "description": "Password for authentication."
-        },
-        "encryption": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "mandatory"
-            },
-            {
-              "type": "string",
-              "const": "optional"
-            },
-            {
-              "type": "string",
-              "const": "forbidden"
-            }
-          ],
-          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
-        },
-        "status_url": {
+        "video_talking_file": {
           "type": "string",
           "format": "uri",
-          "description": "http or https URL to deliver connect status events"
-        },
-        "parallel": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ConnectDeviceSingle"
-          },
-          "description": "Array of destinations to dial simultaneously."
+          "description": "URL of a video file to play when AI is talking. Only works for calls that support video."
         }
       },
-      "required": [
-        "parallel"
-      ],
-      "title": "ConnectDeviceParallel object",
-      "unevaluatedProperties": false
+      "unevaluatedProperties": {
+        "anyOf": [
+          {},
+          {}
+        ]
+      }
     },
-    "ConnectDeviceSerialParallel": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "type": "string",
-          "description": "The caller ID to use when dialing the number."
-        },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ConnectHeaders"
-          },
-          "description": "Custom SIP headers to add to INVITE. It Has no effect on calls to phone numbers."
-        },
-        "codecs": {
-          "type": "string",
-          "description": "Comma-separated string of codecs to offer.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "webrtc_media": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "If true, WebRTC media is offered to the SIP endpoint.\nIt has no effect on calls to phone numbers.\nDefault is `false`."
-        },
-        "session_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 1,
-          "description": "Time, in seconds, to set the SIP `Session-Expires` header in INVITE.\nMust be a positive, non-zero number.\nIt has no effect on calls to phone numbers.\nBased on SignalWire settings."
-        },
-        "ringback": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Array of URIs to play as ringback tone."
-        },
-        "result": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ConnectSwitch"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/CondParams"
-              },
-              "description": "Execute a sequence of instructions depending on the value of a JavaScript condition.",
-              "title": "cond"
-            }
-          ],
-          "description": "`switch` on `return_value` when object `{}` or `cond` when array `[]`"
-        },
-        "timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Time, in seconds, to wait for the call to be answered.\nDefault is 60 seconds."
-        },
-        "max_duration": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Maximum duration, in seconds, allowed for the call.\nDefault is `14400` seconds."
-        },
-        "answer_on_bridge": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "Delay answer until the B-leg answers.\nDefault is `false`."
-        },
-        "call_state_url": {
-          "type": "string",
-          "description": "Webhook URL to send call state change notifications to for all legs. It can be overwritten on each destination."
-        },
-        "call_state_events": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of call state event names to be notified about.\nAllowed event names are:\n    - `created`\n    - `ringing`\n    - `answered`\n    - `ended`"
-        },
-        "confirm": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/ValidConfirmMethods"
-              }
-            }
-          ],
-          "description": "Confirmation object or string."
-        },
-        "confirm_timeout": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "The amount of time, in seconds, to wait for the `confirm` URL to return a response"
-        },
-        "username": {
-          "type": "string",
-          "description": "Username for authentication."
-        },
-        "password": {
-          "type": "string",
-          "description": "Password for authentication."
-        },
-        "encryption": {
-          "anyOf": [
-            {
-              "type": "string",
-              "const": "mandatory"
-            },
-            {
-              "type": "string",
-              "const": "optional"
-            },
-            {
-              "type": "string",
-              "const": "forbidden"
-            }
-          ],
-          "description": "Encryption setting to use. **Possible values:** `mandatory`, `optional`, `forbidden`"
-        },
-        "status_url": {
-          "type": "string",
-          "format": "uri",
-          "description": "http or https URL to deliver connect status events"
-        },
-        "serial_parallel": {
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/$defs/ConnectDeviceSingle"
-            }
-          },
-          "description": "Array of arrays.\nInner arrays contain destinations to dial simultaneously.\nOuter array attempts each parallel group in order."
-        }
-      },
-      "required": [
-        "serial_parallel"
-      ],
-      "title": "ConnectDeviceSerialParallel object",
-      "unevaluatedProperties": false
-    },
-    "ExecuteSwitch": {
-      "type": "object",
-      "properties": {
-        "variable": {
-          "type": "string",
-          "description": "Name of the variable whose value needs to be compared. If not provided, it will check the `return_value` variable.\nCan be one of the listed set of variables, or a string to represent a custom variable."
-        },
-        "case": {
-          "type": "object",
-          "properties": {},
-          "unevaluatedProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/$defs/SWMLMethod"
-            }
-          },
-          "description": "Object of values mapped to array of instructions to execute"
-        },
-        "default": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/SWMLMethod"
-          },
-          "description": "Array of instructions to execute if no cases match"
-        }
-      },
-      "required": [
-        "case"
-      ],
-      "title": "ExecuteSwitch object",
-      "unevaluatedProperties": false
-    },
-    "TranscribeAction": {
-      "oneOf": [
+    "BedrockPostPrompt": {
+      "anyOf": [
         {
-          "$ref": "#/$defs/TranscribeStartAction"
+          "$ref": "#/$defs/OmitPropertiesBedrockPostPomptTextOmittedPromptProps"
         },
         {
-          "type": "string",
-          "const": "stop",
-          "description": "Stops live transcription of the call."
+          "$ref": "#/$defs/OmitPropertiesBedrockPostPromptPomOmittedPromptProps"
+        }
+      ]
+    },
+    "BedrockPrompt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BedrockPromptText"
         },
         {
-          "$ref": "#/$defs/TranscribeSummarizeActionUnion"
+          "$ref": "#/$defs/BedrockPromptPom"
         }
-      ],
-      "title": "TranscribeAction union"
+      ]
     },
-    "TranslateAction": {
-      "oneOf": [
-        {
-          "$ref": "#/$defs/StartAction"
-        },
-        {
-          "type": "string",
-          "const": "stop",
-          "description": "Stops live translation of the call."
-        },
-        {
-          "$ref": "#/$defs/SummarizeActionUnion"
-        },
-        {
-          "$ref": "#/$defs/InjectAction"
-        }
-      ],
-      "title": "TranslateAction union"
-    },
-    "PlayWithURL": {
-      "type": "object",
-      "properties": {
-        "auto_answer": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "If `true`, the call will automatically answer as the sound is playing. If `false`, you will start playing the audio during early media"
-        },
-        "volume": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -40,
-          "maximum": 40,
-          "description": "Volume level for the audio file.\nDefault is `0`.\nValid range is -40 to 40"
-        },
-        "say_voice": {
-          "type": "string",
-          "description": "The voice to use for the text to speech.\nDefault is `Polly.Salli`"
-        },
-        "say_language": {
-          "type": "string",
-          "description": "The language to use for the text to speech.\nDefault is `en-US`"
-        },
-        "say_gender": {
-          "type": "string",
-          "description": "Gender to use for the text to speech.\nDefault is `female`."
-        },
-        "status_url": {
-          "type": "string",
-          "format": "uri",
-          "description": "http or https URL to deliver play status events"
-        },
-        "url": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/play_url"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "URL to play.\nRequired if `urls` is not present.\nAllowed URLs are:\n    - http:// or https:// - audio file to GET\n    - ring:[duration:]<country code> - ring tone to play. For example: ring:us to play single ring or ring:20.0:us to play ring for 20 seconds.\n    - say:<text to speak> - Sentence to say\n    - silence: <duration> - seconds of silence to play"
-        }
-      },
-      "required": [
-        "url"
-      ],
-      "description": "Play with a single URL",
-      "title": "PlayWithURL object",
-      "unevaluatedProperties": false
-    },
-    "PlayWithURLS": {
-      "type": "object",
-      "properties": {
-        "auto_answer": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "If `true`, the call will automatically answer as the sound is playing. If `false`, you will start playing the audio during early media"
-        },
-        "volume": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -40,
-          "maximum": 40,
-          "description": "Volume level for the audio file.\nDefault is `0`.\nValid range is -40 to 40"
-        },
-        "say_voice": {
-          "type": "string",
-          "description": "The voice to use for the text to speech.\nDefault is `Polly.Salli`"
-        },
-        "say_language": {
-          "type": "string",
-          "description": "The language to use for the text to speech.\nDefault is `en-US`"
-        },
-        "say_gender": {
-          "type": "string",
-          "description": "Gender to use for the text to speech.\nDefault is `female`."
-        },
-        "status_url": {
-          "type": "string",
-          "format": "uri",
-          "description": "http or https URL to deliver play status events"
-        },
-        "urls": {
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/play_url"
-              }
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/$defs/SWMLVar"
-              }
-            }
-          ],
-          "description": "Array of URLs to play.\nRequired if `url` is not present.\nAllowed URLs are:\n    - http:// or https:// - audio file to GET\n    - ring:[duration:]<country code> - ring tone to play. For example: ring:us to play single ring or ring:20.0:us to play ring for 20 seconds.\n    - say:<text to speak> - Sentence to say\n    - silence: <duration> - seconds of silence to play"
-        }
-      },
-      "required": [
-        "urls"
-      ],
-      "title": "PlayWithURLS object",
-      "unevaluatedProperties": false
-    },
-    "play_url": {
-      "type": "string",
-      "pattern": "^(http://.*|https://.*|ring: ?[0-9.]*: ?[a-zA-Z]{2}|say: ?.*|silence: ?[0-9.]*|ring: ?[a-zA-Z]{2})$"
-    },
-    "SMSWithBody": {
-      "type": "object",
-      "properties": {
-        "to_number": {
-          "type": "string",
-          "description": "The phone number to send the SMS to."
-        },
-        "from_number": {
-          "type": "string",
-          "description": "The phone number to send the SMS from.\nDefault is the calling party's caller ID number."
-        },
-        "region": {
-          "type": "string",
-          "description": "The region to use for the SMS."
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Array of tags to associate with the message to facilitate log searches."
-        },
-        "body": {
-          "type": "string",
-          "description": "Required if `media` is not present. The body of the SMS message."
-        }
-      },
-      "required": [
-        "to_number",
-        "from_number",
-        "body"
-      ],
-      "title": "SMSWithBody object",
-      "unevaluatedProperties": false
-    },
-    "SMSWithMedia": {
-      "type": "object",
-      "properties": {
-        "to_number": {
-          "type": "string",
-          "description": "The phone number to send the SMS to."
-        },
-        "from_number": {
-          "type": "string",
-          "description": "The phone number to send the SMS from.\nDefault is the calling party's caller ID number."
-        },
-        "region": {
-          "type": "string",
-          "description": "The region to use for the SMS."
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Array of tags to associate with the message to facilitate log searches."
-        },
-        "media": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Required if `body` is not present. Array of media URLs to include in the message."
-        },
-        "body": {
-          "type": "string",
-          "description": "Optional if `media` is present. The body of the SMS message."
-        }
-      },
-      "required": [
-        "to_number",
-        "from_number",
-        "media"
-      ],
-      "title": "SMSWithMedia object",
-      "unevaluatedProperties": false
-    },
-    "PayParameters": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The identifier for your custom parameter. This will be the key in the parameters object."
-        },
-        "value": {
-          "type": "string",
-          "description": "The value associated with the parameter. This will be the value in the parameters object."
-        }
-      },
-      "required": [
-        "name",
-        "value"
-      ],
-      "unevaluatedProperties": false
-    },
-    "PayPrompts": {
-      "type": "object",
-      "properties": {
-        "actions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/PayPromptAction"
-          },
-          "description": "Array of action objects to execute for this prompt. These actions can either play an audio file or speak a phrase."
-        },
-        "for": {
-          "type": "string",
-          "description": "The payment step this prompt is for. See Payment Steps for a list of available steps.\n\n- `payment-card-number`: Collect the payment card number.\n- `expiration-date`: Collect the payment card expiration date.\n- `security-code`: Collect the payment card security code.\n- `postal-code`: Collect the payment card postal code.\n- `payment-processing`: The step used during the payment processing.\n- `payment-completed`: The step used when the payment is completed.\n- `payment-failed`: The step used when the payment fails.\n- `payment-cancelled`: The step used when the payment is cancelled."
-        },
-        "attempts": {
-          "type": "string",
-          "description": "Specifies which payment attempt(s) this prompt applies to. The value increments when a payment fails.\n Use a single number (e.g., \"1\") or space-separated numbers (e.g., \"2 3\") to target the specific attempts."
-        },
-        "card_type": {
-          "type": "string",
-          "description": "Space-seperated list of card types that are allowed to be used for this prompt.\n\nSupported card types:\n    - `visa`\n    - `mastercard`\n    - `amex`\n    - `maestro`\n    - `discover`\n    - `optima`\n    - `jcb`\n    - `diners-club`"
-        },
-        "error_type": {
-          "type": "string",
-          "description": "Space-separated list of error types this prompt applies to\n\nAvailable error types:\n    - `timeout` - User input timeout\n    - `invalid-card-number` - Failed card validation\n    - `invalid-card-type` - Unsupported card type\n    - `invalid-date` - Invalid expiration date\n    - `invalid-security-code` - Invalid CVV format\n    - `invalid-postal-code` - Invalid postal code format\n    - `session-in-progress` - Concurrent session attempt\n    - `card-declined` - Payment declined\n"
-        }
-      },
-      "required": [
-        "actions",
-        "for"
-      ],
-      "unevaluatedProperties": false
-    },
-    "LanguagesWithSoloFillers": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Any arbirary name for the language object."
-        },
-        "code": {
-          "type": "string",
-          "description": "The language code for the ai to hear. For example, 'fr-FR'."
-        },
-        "voice": {
-          "type": "string",
-          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
-        },
-        "_model": {
-          "type": "string",
-          "description": "The model to use for the specified TTS engine. For example, 'arcana'."
-        },
-        "emotion": {
-          "type": "string",
-          "const": "auto",
-          "description": "Enables emotion detection for the set TTS engine. This allows the AI to express emotions when speaking.\nA global emotion or specific emotions for certain topics can be set within the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
-        },
-        "speed": {
-          "type": "string",
-          "const": "auto",
-          "description": "The speed to use for the specified TTS engine. This allows the AI to speak at a different speed at different points in the conversation.\nThe speed behavior can be defined in the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
-        },
-        "engine": {
-          "type": "string",
-          "description": "The engine to use for the language. For example, 'elevenlabs'.",
-          "deprecated": true
-        },
-        "fillers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings to be used as fillers in the conversation. This will be used for both speech and function fillers if provided.",
-          "deprecated": true
-        }
-      },
-      "required": [
-        "name",
-        "code",
-        "voice"
-      ],
-      "title": "LanguagesWithSoloFillers",
-      "unevaluatedProperties": false
-    },
-    "LanguagesWithFillers": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Any arbirary name for the language object."
-        },
-        "code": {
-          "type": "string",
-          "description": "The language code for the ai to hear. For example, 'fr-FR'."
-        },
-        "voice": {
-          "type": "string",
-          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
-        },
-        "_model": {
-          "type": "string",
-          "description": "The model to use for the specified TTS engine. For example, 'arcana'."
-        },
-        "emotion": {
-          "type": "string",
-          "const": "auto",
-          "description": "Enables emotion detection for the set TTS engine. This allows the AI to express emotions when speaking.\nA global emotion or specific emotions for certain topics can be set within the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
-        },
-        "speed": {
-          "type": "string",
-          "const": "auto",
-          "description": "The speed to use for the specified TTS engine. This allows the AI to speak at a different speed at different points in the conversation.\nThe speed behavior can be defined in the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
-        },
-        "engine": {
-          "type": "string",
-          "description": "The engine to use for the language. For example, 'elevenlabs'.",
-          "deprecated": true
-        },
-        "function_fillers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings to be used as fillers in the conversation when calling a `swaig function`. This helps the AI break silence between responses. The filler is played asynchronously during the function call."
-        },
-        "speech_fillers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings to be used as fillers in the conversation. This helps the AI break silence between responses."
-        }
-      },
-      "required": [
-        "name",
-        "code",
-        "voice"
-      ],
-      "title": "LanguagesWithFillers",
-      "unevaluatedProperties": false
-    },
-    "AttentionTimeout": {
-      "type": "integer",
-      "minimum": 10000,
-      "maximum": 600000
-    },
-    "Direction": {
-      "type": "string",
-      "enum": [
-        "inbound",
-        "outbound"
-      ],
-      "title": "Direction enum"
-    },
-    "AIPostPromptText": {
-      "type": "object",
-      "properties": {
-        "temperature": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1.5,
-          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
-        },
-        "confidence": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
-        },
-        "presence_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
-        },
-        "frequency_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
-        },
-        "text": {
-          "type": "string",
-          "description": "The instructions to send to the agent."
-        }
-      },
-      "required": [
-        "text"
-      ],
-      "title": "AIPromptBase",
-      "unevaluatedProperties": false
-    },
-    "AIPostPromptPom": {
-      "type": "object",
-      "properties": {
-        "temperature": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1.5,
-          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
-        },
-        "confidence": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
-        },
-        "presence_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
-        },
-        "frequency_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
-        },
-        "pom": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/POM"
-          },
-          "description": "The instructions to send to the agent."
-        }
-      },
-      "required": [
-        "pom"
-      ],
-      "title": "AIPromptBase",
-      "unevaluatedProperties": false
-    },
-    "AIPromptText": {
-      "type": "object",
-      "properties": {
-        "temperature": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1.5,
-          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
-        },
-        "confidence": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
-        },
-        "presence_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
-        },
-        "frequency_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
-        },
-        "text": {
-          "type": "string",
-          "description": "The instructions to send to the agent."
-        },
-        "contexts": {
-          "$ref": "#/$defs/Contexts",
-          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
-        }
-      },
-      "required": [
-        "text"
-      ],
-      "title": "AIPromptBase",
-      "unevaluatedProperties": false
-    },
-    "AIPromptPom": {
-      "type": "object",
-      "properties": {
-        "temperature": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1.5,
-          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
-        },
-        "top_p": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
-        },
-        "confidence": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
-        },
-        "presence_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
-        },
-        "frequency_penalty": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "minimum": -2,
-          "maximum": 2,
-          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
-        },
-        "pom": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/POM"
-          },
-          "minItems": 1,
-          "description": "Prompt Object Model (POM) is a structured data format for composing, organizing, and rendering prompt instructions for AI agents.\nPOM ensures that the prompt is structured in a way that is best for the AI agent to understand and execute.\nThe first item in the array MUST be FirstPOMSection (with optional title).\nAll subsequent items MUST be PomSection (with required title and body)."
-        },
-        "contexts": {
-          "$ref": "#/$defs/Contexts",
-          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
-        }
-      },
-      "required": [
-        "pom"
-      ],
-      "title": "AIPromptBase",
-      "unevaluatedProperties": false
-    },
-    "SWAIGDefaults": {
-      "type": "object",
-      "properties": {
-        "web_hook_url": {
-          "type": "string",
-          "description": "Default URL to send status callbacks and reports to. Authentication can also be set in the url in the format of `username:password@url.`"
-        }
-      },
-      "title": "defaults",
-      "unevaluatedProperties": false
-    },
-    "SWAIGNativeFunction": {
-      "type": "string",
-      "enum": [
-        "check_time",
-        "wait_seconds"
-      ],
-      "title": "native_functions"
-    },
-    "SWAIGIncludes": {
+    "BedrockSWAIG": {
       "type": "object",
       "properties": {
         "functions": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/BedrockSWAIGFunction"
           },
-          "description": "Remote functions to fetch and include in your AI application."
+          "description": "An array of JSON objects to define functions that can be executed during the interaction with the Bedrock AI. Default is not set.\nThe fields of this object are the six following."
         },
-        "url": {
-          "type": "string",
-          "description": "URL to fetch remote functions and include in your AI application. Authentication can also be set in the url in the format of `username:password@url`."
+        "defaults": {
+          "$ref": "#/$defs/SWAIGDefaults",
+          "description": "Default settings for all SWAIG functions. If `defaults` is not set, settings may be set in each function object. Default is not set."
         },
-        "meta_data": {
-          "type": "object",
-          "properties": {},
-          "unevaluatedProperties": {},
-          "description": ""
-        }
-      },
-      "required": [
-        "functions",
-        "url"
-      ],
-      "title": "includes",
-      "unevaluatedProperties": false
-    },
-    "SWAIGFunction": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/UserSWAIGFunction"
+        "native_functions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWAIGNativeFunction"
+          },
+          "description": "Prebuilt functions the AI agent is able to call from this list of available native functions"
         },
-        {
-          "$ref": "#/$defs/StartUpHookSWAIGFunction"
-        },
-        {
-          "$ref": "#/$defs/HangUpHookSWAIGFunction"
-        },
-        {
-          "$ref": "#/$defs/SummarizeConversationSWAIGFunction"
-        }
-      ]
-    },
-    "SWAIGInternalFiller": {
-      "type": "object",
-      "properties": {
-        "hangup": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to hangup the call.\nFillers will be played when the `hangup` function is called."
-        },
-        "check_time": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to check the current time.\nFillers will be played when the `check_time` function is called."
-        },
-        "wait_for_user": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to wait for user input.\nFillers will be played when the `wait_for_user` function is called."
-        },
-        "wait_seconds": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to wait for a specified number of seconds.\nFillers will be played when the `wait_seconds` function is called."
-        },
-        "adjust_response_latency": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to adjust the response latency of the AI Agent.\nFillers will be played when the `adjust_response_latency` function is called."
-        },
-        "next_step": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to proceed to the next step in the conversation flow.\nFillers will be played when the `next_step` function is called."
-        },
-        "change_context": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to change the context of the conversation.\nFillers will be played when the `change_context` function is called."
-        },
-        "get_visual_input": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to visually process input that the AI Agent has captured.\nFillers will be played when the `get_visual_input` function is called."
-        },
-        "get_ideal_strategy": {
-          "$ref": "#/$defs/FunctionFillers",
-          "description": "This function is used to get the ideal strategy for the current conversation state.\nFillers will be played when the ai utilizes the `thinking` capability and uses the `get_ideal_strategy` function."
+        "includes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SWAIGIncludes"
+          },
+          "description": "An array of objects to include remote function signatures.\nThe object fields are url to specify where the remote functions are defined and functions which is an array of the function names as strings."
         }
       },
       "unevaluatedProperties": false
@@ -4517,6 +4419,15 @@
         {
           "$ref": "#/$defs/StopDenoise"
         }
+      ]
+    },
+    "CallStatus": {
+      "type": "string",
+      "enum": [
+        "created",
+        "ringing",
+        "answered",
+        "ended"
       ]
     },
     "TranscribeStartAction": {
@@ -4821,6 +4732,1117 @@
           "$ref": "#/$defs/PayPromptPlayAction"
         }
       ]
+    },
+    "LanguagesWithSoloFillers": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Any arbirary name for the language object."
+        },
+        "code": {
+          "type": "string",
+          "description": "The language code for the ai to hear. For example, 'fr-FR'."
+        },
+        "voice": {
+          "type": "string",
+          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
+        },
+        "_model": {
+          "type": "string",
+          "description": "The model to use for the specified TTS engine. For example, 'arcana'."
+        },
+        "emotion": {
+          "type": "string",
+          "const": "auto",
+          "description": "Enables emotion detection for the set TTS engine. This allows the AI to express emotions when speaking.\nA global emotion or specific emotions for certain topics can be set within the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
+        },
+        "speed": {
+          "type": "string",
+          "const": "auto",
+          "description": "The speed to use for the specified TTS engine. This allows the AI to speak at a different speed at different points in the conversation.\nThe speed behavior can be defined in the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
+        },
+        "engine": {
+          "type": "string",
+          "description": "The engine to use for the language. For example, 'elevenlabs'.",
+          "deprecated": true
+        },
+        "fillers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings to be used as fillers in the conversation. This will be used for both speech and function fillers if provided.",
+          "deprecated": true
+        }
+      },
+      "required": [
+        "name",
+        "code",
+        "voice"
+      ],
+      "title": "LanguagesWithSoloFillers",
+      "unevaluatedProperties": false
+    },
+    "LanguagesWithFillers": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Any arbirary name for the language object."
+        },
+        "code": {
+          "type": "string",
+          "description": "The language code for the ai to hear. For example, 'fr-FR'."
+        },
+        "voice": {
+          "type": "string",
+          "description": "Voice to use for the language. For example, 'fr-FR-Neural2-B'."
+        },
+        "_model": {
+          "type": "string",
+          "description": "The model to use for the specified TTS engine. For example, 'arcana'."
+        },
+        "emotion": {
+          "type": "string",
+          "const": "auto",
+          "description": "Enables emotion detection for the set TTS engine. This allows the AI to express emotions when speaking.\nA global emotion or specific emotions for certain topics can be set within the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
+        },
+        "speed": {
+          "type": "string",
+          "const": "auto",
+          "description": "The speed to use for the specified TTS engine. This allows the AI to speak at a different speed at different points in the conversation.\nThe speed behavior can be defined in the prompt of the AI.\nIMPORTANT: Only works with [`Cartesia`](/voice/getting-started/voice-and-languages#cartesia) TTS engine."
+        },
+        "engine": {
+          "type": "string",
+          "description": "The engine to use for the language. For example, 'elevenlabs'.",
+          "deprecated": true
+        },
+        "function_fillers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings to be used as fillers in the conversation when calling a `swaig function`. This helps the AI break silence between responses. The filler is played asynchronously during the function call."
+        },
+        "speech_fillers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings to be used as fillers in the conversation. This helps the AI break silence between responses."
+        }
+      },
+      "required": [
+        "name",
+        "code",
+        "voice"
+      ],
+      "title": "LanguagesWithFillers",
+      "unevaluatedProperties": false
+    },
+    "AttentionTimeout": {
+      "type": "integer",
+      "minimum": 10000,
+      "maximum": 600000
+    },
+    "Direction": {
+      "type": "string",
+      "enum": [
+        "inbound",
+        "outbound"
+      ],
+      "title": "Direction enum"
+    },
+    "AIPostPromptText": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "text": {
+          "type": "string",
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "AIPromptBase",
+      "unevaluatedProperties": false
+    },
+    "AIPostPromptPom": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "pom"
+      ],
+      "title": "AIPromptBase",
+      "unevaluatedProperties": false
+    },
+    "AIPromptText": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "text": {
+          "type": "string",
+          "description": "The instructions to send to the agent."
+        },
+        "contexts": {
+          "$ref": "#/$defs/Contexts",
+          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "AIPromptBase",
+      "unevaluatedProperties": false
+    },
+    "AIPromptPom": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "minItems": 1,
+          "description": "Prompt Object Model (POM) is a structured data format for composing, organizing, and rendering prompt instructions for AI agents.\nPOM ensures that the prompt is structured in a way that is best for the AI agent to understand and execute.\nThe first item in the array MUST be FirstPOMSection (with optional title).\nAll subsequent items MUST be PomSection (with required title and body)."
+        },
+        "contexts": {
+          "$ref": "#/$defs/Contexts",
+          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
+        }
+      },
+      "required": [
+        "pom"
+      ],
+      "title": "AIPromptBase",
+      "unevaluatedProperties": false
+    },
+    "SWAIGDefaults": {
+      "type": "object",
+      "properties": {
+        "web_hook_url": {
+          "type": "string",
+          "description": "Default URL to send status callbacks and reports to. Authentication can also be set in the url in the format of `username:password@url.`"
+        }
+      },
+      "title": "defaults",
+      "unevaluatedProperties": false
+    },
+    "SWAIGNativeFunction": {
+      "type": "string",
+      "enum": [
+        "check_time",
+        "wait_seconds",
+        "wait_for_user",
+        "adjust_response_latency"
+      ],
+      "title": "native_functions"
+    },
+    "SWAIGIncludes": {
+      "type": "object",
+      "properties": {
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Remote functions to fetch and include in your AI application."
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to fetch remote functions and include in your AI application. Authentication can also be set in the url in the format of `username:password@url`."
+        },
+        "meta_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": ""
+        }
+      },
+      "required": [
+        "functions",
+        "url"
+      ],
+      "title": "includes",
+      "unevaluatedProperties": false
+    },
+    "SWAIGFunction": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/UserSWAIGFunction"
+        },
+        {
+          "$ref": "#/$defs/StartUpHookSWAIGFunction"
+        },
+        {
+          "$ref": "#/$defs/HangUpHookSWAIGFunction"
+        },
+        {
+          "$ref": "#/$defs/SummarizeConversationSWAIGFunction"
+        }
+      ]
+    },
+    "SWAIGInternalFiller": {
+      "type": "object",
+      "properties": {
+        "hangup": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to hangup the call.\nFillers will be played when the `hangup` function is called."
+        },
+        "check_time": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to check the current time.\nFillers will be played when the `check_time` function is called."
+        },
+        "wait_for_user": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to wait for user input.\nFillers will be played when the `wait_for_user` function is called."
+        },
+        "wait_seconds": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to wait for a specified number of seconds.\nFillers will be played when the `wait_seconds` function is called."
+        },
+        "adjust_response_latency": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to adjust the response latency of the AI Agent.\nFillers will be played when the `adjust_response_latency` function is called."
+        },
+        "next_step": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to proceed to the next step in the conversation flow.\nFillers will be played when the `next_step` function is called."
+        },
+        "change_context": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to change the context of the conversation.\nFillers will be played when the `change_context` function is called."
+        },
+        "get_visual_input": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to visually process input that the AI Agent has captured.\nFillers will be played when the `get_visual_input` function is called."
+        },
+        "get_ideal_strategy": {
+          "$ref": "#/$defs/FunctionFillers",
+          "description": "This function is used to get the ideal strategy for the current conversation state.\nFillers will be played when the ai utilizes the `thinking` capability and uses the `get_ideal_strategy` function."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "OmitPropertiesBedrockPostPomptTextOmittedPromptProps": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "text": {
+          "type": "string",
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "description": "The template for omitting properties.",
+      "unevaluatedProperties": false
+    },
+    "OmitPropertiesBedrockPostPromptPomOmittedPromptProps": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "pom"
+      ],
+      "description": "The template for omitting properties.",
+      "unevaluatedProperties": false
+    },
+    "BedrockPromptText": {
+      "type": "object",
+      "properties": {
+        "voice_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "tiffany"
+            },
+            {
+              "type": "string",
+              "const": "matthew"
+            },
+            {
+              "type": "string",
+              "const": "amy"
+            },
+            {
+              "type": "string",
+              "const": "lupe"
+            },
+            {
+              "type": "string",
+              "const": "carlos"
+            }
+          ],
+          "default": "matthew"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "text": {
+          "type": "string",
+          "description": "The instructions to send to the agent."
+        },
+        "contexts": {
+          "$ref": "#/$defs/Contexts",
+          "description": "An object that defines the context steps for the AI. The context steps are used to define the flow of the conversation.\nEvery context object requires a `default` key, which is the default context to use at the beginning of the conversation.\nAdditionally, more context steps can be defined as any other key in the object."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "unevaluatedProperties": false
+    },
+    "BedrockPromptPom": {
+      "type": "object",
+      "properties": {
+        "voice_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "tiffany"
+            },
+            {
+              "type": "string",
+              "const": "matthew"
+            },
+            {
+              "type": "string",
+              "const": "amy"
+            },
+            {
+              "type": "string",
+              "const": "lupe"
+            },
+            {
+              "type": "string",
+              "const": "carlos"
+            }
+          ],
+          "default": "matthew"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 256,
+          "description": "Limits the amount of tokens that the AI agent may generate when creating its response"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1.5,
+          "description": "Randomness setting. Float value between 0.0 and 1.5. Closer to 0 will make the output less random."
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Randomness setting. Alternative to `temperature`. Float value between 0.0 and 1.0. Closer to 0 will make the output less random."
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Threshold to fire a speech-detect event at the end of the utterance. Float value between 0.0 and 1.0. \nDecreasing this value will reduce the pause after the user speaks, but may introduce false positives."
+        },
+        "presence_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to staying on topic. Float value between -2.0 and 2.0. Positive values increase the model's likelihood to talk about new topics."
+        },
+        "frequency_penalty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "minimum": -2,
+          "maximum": 2,
+          "description": "Aversion to repeating lines. Float value between -2.0 and 2.0. Positive values decrease the model's likelihood to repeat the same line verbatim."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "The instructions to send to the agent."
+        }
+      },
+      "required": [
+        "pom"
+      ],
+      "unevaluatedProperties": false
+    },
+    "BedrockSWAIGFunction": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PickPropertiesUserSWAIGFunctionPickedSWAIGFunctionProps"
+        },
+        {
+          "$ref": "#/$defs/PickPropertiesStartUpHookSWAIGFunctionPickedSWAIGFunctionProps"
+        },
+        {
+          "$ref": "#/$defs/PickPropertiesHangUpHookSWAIGFunctionPickedSWAIGFunctionProps"
+        },
+        {
+          "$ref": "#/$defs/PickPropertiesSummarizeConversationSWAIGFunctionPickedSWAIGFunctionProps"
+        }
+      ]
+    },
+    "TranscribeDirection": {
+      "type": "string",
+      "enum": [
+        "remote-caller",
+        "local-caller"
+      ],
+      "title": "TranscribeDirection enum"
+    },
+    "TranscribeSummarizeAction": {
+      "type": "object",
+      "properties": {
+        "summarize": {
+          "type": "object",
+          "properties": {
+            "webhook": {
+              "type": "string",
+              "description": "The webhook URL to be called."
+            },
+            "prompt": {
+              "type": "string",
+              "description": "The prompt for summarizaton."
+            }
+          },
+          "description": "Summarizes the conversation as an object, allowing you to specify the webhook url and prompt for the summary.",
+          "unevaluatedProperties": false
+        }
+      },
+      "required": [
+        "summarize"
+      ],
+      "title": "TranscribeSummarizeAction object",
+      "unevaluatedProperties": false
+    },
+    "TranslateDirection": {
+      "type": "string",
+      "enum": [
+        "remote-caller",
+        "local-caller"
+      ],
+      "title": "TranslateDirection enum"
+    },
+    "SummarizeAction": {
+      "type": "object",
+      "properties": {
+        "summarize": {
+          "type": "object",
+          "properties": {
+            "webhook": {
+              "type": "string",
+              "description": "The webhook URL to be called."
+            },
+            "prompt": {
+              "type": "string",
+              "description": "The prompt for summarizaton."
+            }
+          },
+          "description": "Summarizes the conversation as an object, allowing you to specify the webhook url and prompt for the summary.",
+          "unevaluatedProperties": false
+        }
+      },
+      "required": [
+        "summarize"
+      ],
+      "title": "SummarizeAction object",
+      "unevaluatedProperties": false
+    },
+    "PayPromptSayAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Say",
+          "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
+        },
+        "phrase": {
+          "type": "string",
+          "description": "The phrase to speak"
+        }
+      },
+      "required": [
+        "type",
+        "phrase"
+      ],
+      "unevaluatedProperties": false
+    },
+    "PayPromptPlayAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Play",
+          "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
+        },
+        "phrase": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^(http|https)://",
+          "description": "The URL of the audio file to play"
+        }
+      },
+      "required": [
+        "type",
+        "phrase"
+      ],
+      "unevaluatedProperties": false
     },
     "POM": {
       "anyOf": [
@@ -6155,110 +7177,219 @@
       ],
       "description": "Supported language codes"
     },
-    "TranscribeDirection": {
-      "type": "string",
-      "enum": [
-        "remote-caller",
-        "local-caller"
-      ],
-      "title": "TranscribeDirection enum"
-    },
-    "TranscribeSummarizeAction": {
+    "PickPropertiesUserSWAIGFunctionPickedSWAIGFunctionProps": {
       "type": "object",
       "properties": {
-        "summarize": {
-          "type": "object",
-          "properties": {
-            "webhook": {
-              "type": "string",
-              "description": "The webhook URL to be called."
-            },
-            "prompt": {
-              "type": "string",
-              "description": "The prompt for summarizaton."
-            }
-          },
-          "description": "Summarizes the conversation as an object, allowing you to specify the webhook url and prompt for the summary.",
-          "unevaluatedProperties": false
-        }
-      },
-      "required": [
-        "summarize"
-      ],
-      "title": "TranscribeSummarizeAction object",
-      "unevaluatedProperties": false
-    },
-    "TranslateDirection": {
-      "type": "string",
-      "enum": [
-        "remote-caller",
-        "local-caller"
-      ],
-      "title": "TranslateDirection enum"
-    },
-    "SummarizeAction": {
-      "type": "object",
-      "properties": {
-        "summarize": {
-          "type": "object",
-          "properties": {
-            "webhook": {
-              "type": "string",
-              "description": "The webhook URL to be called."
-            },
-            "prompt": {
-              "type": "string",
-              "description": "The prompt for summarizaton."
-            }
-          },
-          "description": "Summarizes the conversation as an object, allowing you to specify the webhook url and prompt for the summary.",
-          "unevaluatedProperties": false
-        }
-      },
-      "required": [
-        "summarize"
-      ],
-      "title": "SummarizeAction object",
-      "unevaluatedProperties": false
-    },
-    "PayPromptSayAction": {
-      "type": "object",
-      "properties": {
-        "type": {
+        "description": {
           "type": "string",
-          "const": "Say",
-          "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
+          "description": "A description of the context and purpose of the function, to explain to the agent when to use it."
         },
-        "phrase": {
+        "parameters": {
+          "$ref": "#/$defs/FunctionParameters",
+          "description": "A JSON object that defines the expected user input parameters and their validation rules for the function."
+        },
+        "active": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Whether the function is active. Default is `true`."
+        },
+        "meta_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script or from the SWML set_meta_data action.\nThis data can be referenced locally to the function.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string.\nDefault is not set."
+        },
+        "meta_data_token": {
           "type": "string",
-          "description": "The phrase to speak"
+          "description": "Scoping token for meta_data. If not supplied, metadata will be scoped to function's `web_hook_url`. Default is set by SignalWire."
+        },
+        "data_map": {
+          "$ref": "#/$defs/DataMap",
+          "minProperties": 1,
+          "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "web_hook_url": {
+          "type": "string",
+          "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Authentication can also be set in the url in the format of `username:password@url.`"
+        },
+        "function": {
+          "type": "string",
+          "description": "The unique name for the function."
         }
       },
       "required": [
-        "type",
-        "phrase"
+        "description",
+        "function"
       ],
+      "description": "The template for picking properties.",
       "unevaluatedProperties": false
     },
-    "PayPromptPlayAction": {
+    "PickPropertiesStartUpHookSWAIGFunctionPickedSWAIGFunctionProps": {
       "type": "object",
       "properties": {
-        "type": {
+        "description": {
           "type": "string",
-          "const": "Play",
-          "description": "When the action `type` is `Say`, this value is the text to be spoken; when the type is `Play`, it should be a URL to the audio file."
+          "description": "A description of the context and purpose of the function, to explain to the agent when to use it."
         },
-        "phrase": {
+        "parameters": {
+          "$ref": "#/$defs/FunctionParameters",
+          "description": "A JSON object that defines the expected user input parameters and their validation rules for the function."
+        },
+        "active": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Whether the function is active. Default is `true`."
+        },
+        "meta_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script or from the SWML set_meta_data action.\nThis data can be referenced locally to the function.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string.\nDefault is not set."
+        },
+        "meta_data_token": {
           "type": "string",
-          "format": "uri",
-          "pattern": "^(http|https)://",
-          "description": "The URL of the audio file to play"
+          "description": "Scoping token for meta_data. If not supplied, metadata will be scoped to function's `web_hook_url`. Default is set by SignalWire."
+        },
+        "data_map": {
+          "$ref": "#/$defs/DataMap",
+          "minProperties": 1,
+          "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "web_hook_url": {
+          "type": "string",
+          "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Authentication can also be set in the url in the format of `username:password@url.`"
+        },
+        "function": {
+          "type": "string",
+          "const": "startup_hook",
+          "description": "The unique name for the function. For the start_hook function, the function name is 'start_hook'."
         }
       },
       "required": [
-        "type",
-        "phrase"
+        "description",
+        "function"
       ],
+      "description": "The template for picking properties.",
+      "unevaluatedProperties": false
+    },
+    "PickPropertiesHangUpHookSWAIGFunctionPickedSWAIGFunctionProps": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "A description of the context and purpose of the function, to explain to the agent when to use it."
+        },
+        "parameters": {
+          "$ref": "#/$defs/FunctionParameters",
+          "description": "A JSON object that defines the expected user input parameters and their validation rules for the function."
+        },
+        "active": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Whether the function is active. Default is `true`."
+        },
+        "meta_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script or from the SWML set_meta_data action.\nThis data can be referenced locally to the function.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string.\nDefault is not set."
+        },
+        "meta_data_token": {
+          "type": "string",
+          "description": "Scoping token for meta_data. If not supplied, metadata will be scoped to function's `web_hook_url`. Default is set by SignalWire."
+        },
+        "data_map": {
+          "$ref": "#/$defs/DataMap",
+          "minProperties": 1,
+          "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "web_hook_url": {
+          "type": "string",
+          "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Authentication can also be set in the url in the format of `username:password@url.`"
+        },
+        "function": {
+          "type": "string",
+          "const": "hangup_hook",
+          "description": "The unique name for the function. For the stop_hook function, the function name is 'stop_hook'."
+        }
+      },
+      "required": [
+        "description",
+        "function"
+      ],
+      "description": "The template for picking properties.",
+      "unevaluatedProperties": false
+    },
+    "PickPropertiesSummarizeConversationSWAIGFunctionPickedSWAIGFunctionProps": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "A description of the context and purpose of the function, to explain to the agent when to use it."
+        },
+        "parameters": {
+          "$ref": "#/$defs/FunctionParameters",
+          "description": "A JSON object that defines the expected user input parameters and their validation rules for the function."
+        },
+        "active": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "Whether the function is active. Default is `true`."
+        },
+        "meta_data": {
+          "type": "object",
+          "properties": {},
+          "unevaluatedProperties": {},
+          "description": "A powerful and flexible environmental variable which can accept arbitrary data that is set initially in the SWML script or from the SWML set_meta_data action.\nThis data can be referenced locally to the function.\nAll contained information can be accessed and expanded within the prompt - for example, by using a template string.\nDefault is not set."
+        },
+        "meta_data_token": {
+          "type": "string",
+          "description": "Scoping token for meta_data. If not supplied, metadata will be scoped to function's `web_hook_url`. Default is set by SignalWire."
+        },
+        "data_map": {
+          "$ref": "#/$defs/DataMap",
+          "minProperties": 1,
+          "description": "An object that processes function inputs and executes operations through expressions, webhooks, or direct output.\nProperties are evaluated in strict priority order:\n1. expressions\n2. webhooks\n3. output\n\nEvaluation stops at the first property that returns a valid output result, similar to a return statement in a function.\nAny subsequent properties are ignored when a valid output is returned.\nIf a valid output is not returned from any of the properties, a generic error message is returned."
+        },
+        "web_hook_url": {
+          "type": "string",
+          "description": "Function-specific URL to send status callbacks and reports to. Takes precedence over a default setting. Authentication can also be set in the url in the format of `username:password@url.`"
+        },
+        "function": {
+          "type": "string",
+          "const": "summarize_conversation",
+          "description": "The unique name for the function.. For the summarize_conversation function, the function name is 'summarize_conversation'."
+        }
+      },
+      "required": [
+        "description",
+        "function"
+      ],
+      "description": "The template for picking properties.",
       "unevaluatedProperties": false
     },
     "PomSectionBodyContent": {
@@ -6455,6 +7586,20 @@
           "type": "boolean",
           "description": "A boolean value, if set to `true`, the conversation history will be reset and the agent will only have the context of the original system prompt."
         },
+        "enter_fillers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FunctionFillers"
+          },
+          "description": "An array of objects that define the enter fillers for the context. Enter fillers are used when entering the context."
+        },
+        "exit_fillers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FunctionFillers"
+          },
+          "description": "An array of objects that define the exit fillers for the context. Exit fillers are used when exiting the context."
+        },
         "pom": {
           "type": "array",
           "items": {
@@ -6483,6 +7628,20 @@
         "isolated": {
           "type": "boolean",
           "description": "A boolean value, if set to `true`, the conversation history will be reset and the agent will only have the context of the original system prompt."
+        },
+        "enter_fillers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FunctionFillers"
+          },
+          "description": "An array of objects that define the enter fillers for the context. Enter fillers are used when entering the context."
+        },
+        "exit_fillers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FunctionFillers"
+          },
+          "description": "An array of objects that define the exit fillers for the context. Exit fillers are used when exiting the context."
         },
         "text": {
           "type": "string",
@@ -6712,13 +7871,13 @@
     "ContextSteps": {
       "anyOf": [
         {
-          "$ref": "#/$defs/StepTypePOM"
+          "$ref": "#/$defs/ContextPOMSteps"
         },
         {
-          "$ref": "#/$defs/StepTypeText"
+          "$ref": "#/$defs/ContextTextSteps"
         }
       ],
-      "title": "ContextStepsParams union"
+      "title": "Context step - supports either POM or text-based steps"
     },
     "StringProperty": {
       "type": "object",
@@ -7137,25 +8296,128 @@
       ],
       "title": "Action union"
     },
-    "StepTypePOM": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/POMEndStep"
+    "ContextPOMSteps": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^(?!next$).*$",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
         },
-        {
-          "$ref": "#/$defs/POMValidSteps"
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "end": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
+        },
+        "valid_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
+        },
+        "pom": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/POM"
+          },
+          "description": "An array of objects that define the POM for the step. POM is the Post-Prompt Object Model, which is used to define the flow of the conversation."
         }
-      ]
+      },
+      "required": [
+        "name",
+        "pom"
+      ],
+      "title": "Context step with POM (Post-Prompt Object Model)",
+      "unevaluatedProperties": false
     },
-    "StepTypeText": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/TextEndStep"
+    "ContextTextSteps": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^(?!next$).*$",
+          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
         },
-        {
-          "$ref": "#/$defs/TextValidSteps"
+        "step_criteria": {
+          "type": "string",
+          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
+        },
+        "valid_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid contexts that the conversation can transition to from this step."
+        },
+        "skip_user_turn": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/SWMLVar"
+            }
+          ],
+          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
+        },
+        "end": {
+          "type": "boolean",
+          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
+        },
+        "valid_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
+        },
+        "text": {
+          "type": "string",
+          "description": "The prompt or instructions given to the AI at this step."
         }
-      ]
+      },
+      "required": [
+        "name",
+        "text"
+      ],
+      "title": "Context step with text prompt",
+      "unevaluatedProperties": false
     },
     "StringFormat": {
       "type": "string",
@@ -7468,230 +8730,6 @@
         "user_input"
       ],
       "title": "UserInputAction object",
-      "unevaluatedProperties": false
-    },
-    "POMEndStep": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "^(?!next$).*$",
-          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
-        },
-        "step_criteria": {
-          "type": "string",
-          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
-        },
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
-        },
-        "valid_contexts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid contexts that the conversation can transition to from this step."
-        },
-        "skip_user_turn": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
-        },
-        "pom": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/POM"
-          },
-          "description": "An array of objects that define the POM for the step. POM is the Post-Prompt Object Model, which is used to define the flow of the conversation."
-        },
-        "end": {
-          "type": "boolean",
-          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
-        }
-      },
-      "required": [
-        "name",
-        "pom"
-      ],
-      "title": "ContextStepsEnd object",
-      "unevaluatedProperties": false
-    },
-    "POMValidSteps": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "^(?!next$).*$",
-          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
-        },
-        "step_criteria": {
-          "type": "string",
-          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
-        },
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
-        },
-        "valid_contexts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid contexts that the conversation can transition to from this step."
-        },
-        "skip_user_turn": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
-        },
-        "pom": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/POM"
-          },
-          "description": "An array of objects that define the POM for the step. POM is the Post-Prompt Object Model, which is used to define the flow of the conversation."
-        },
-        "valid_steps": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
-        }
-      },
-      "required": [
-        "name",
-        "pom"
-      ],
-      "title": "ContextStepsValidSteps object",
-      "unevaluatedProperties": false
-    },
-    "TextEndStep": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "^(?!next$).*$",
-          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
-        },
-        "step_criteria": {
-          "type": "string",
-          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
-        },
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
-        },
-        "valid_contexts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid contexts that the conversation can transition to from this step."
-        },
-        "skip_user_turn": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
-        },
-        "text": {
-          "type": "string",
-          "description": "The prompt or instructions given to the AI at this step."
-        },
-        "end": {
-          "type": "boolean",
-          "description": "A boolean value, if set to `true`, will end the contexts conversation and transition to a normal interaction."
-        }
-      },
-      "required": [
-        "name",
-        "text"
-      ],
-      "title": "ContextStepsBase object",
-      "unevaluatedProperties": false
-    },
-    "TextValidSteps": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "^(?!next$).*$",
-          "description": "The name of the step. The name must be unique within the context. The name is used for referencing the step in the context."
-        },
-        "step_criteria": {
-          "type": "string",
-          "description": "The conditions that must be met for the conversation to proceed to the next step. \nIf a condition is not met, the conversation will not proceed to the next step.\nIt's **highly** recommended you create a custom criteria for the step to get the intended behavior.   "
-        },
-        "functions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings, where each string is the name of a SWAIG.function that can be executed from this step."
-        },
-        "valid_contexts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid contexts that the conversation can transition to from this step."
-        },
-        "skip_user_turn": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/$defs/SWMLVar"
-            }
-          ],
-          "description": "A boolean value, if set to `true`, will skip the user's turn to respond in the conversation and proceed to the next step."
-        },
-        "text": {
-          "type": "string",
-          "description": "The prompt or instructions given to the AI at this step."
-        },
-        "valid_steps": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of valid steps that the conversation can proceed to from this step.\nIf the array is empty, or the `valid_steps` key is not present, the conversation will proceed to the next step in the context."
-        }
-      },
-      "required": [
-        "name",
-        "text"
-      ],
-      "title": "ContextStepsBase object",
       "unevaluatedProperties": false
     }
   },
